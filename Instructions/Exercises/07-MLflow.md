@@ -17,7 +17,7 @@ Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dan
 
 > **Remarque** : Pour cet exercice, vous avez besoin d’un espace de travail Azure Databricks **Premium** dans une région où la *mise à disposition de modèles* est prise en charge. Pour plus d’informations sur les fonctionnalités régionales d’Azure Databricks, consultez [Régions Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions). Si vous disposez déjà d’un espace de travail Azure Databricks de type *Premium* ou *Essai* dans une région appropriée, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice comprend un script qui permet de provisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul nécessaires au bon déroulement de cet exercice. Cela suppose que votre compte d’utilisateur est doté d’autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota insuffisant ou d’autorisations inappropriées, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Azure.
+Cet exercice comprend un script qui permet de configurer un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul nécessaires au bon déroulement de cet exercice. Cela suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’autorisations ou d’un quota insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Azure.
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -68,7 +68,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
         - *Inclut Spark > **3.4***
     - **Utiliser l’accélération Photon** : <u>Dé</u>coché
     - **Type de nœud** : Standard_DS3_v2
-    - **Arrêter après** *20* **minutes d’inactivité**
+    - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
 
@@ -187,7 +187,7 @@ Vous pouvez utiliser les mêmes bibliothèques et techniques que celles que vous
     ```
 
 1. À la fin de l’exécution de l’expérience, sous la cellule de code, utilisez si nécessaire le bouton **&#9656;** pour développer les détails de l’**exécution de MLflow**. Utilisez le lien hypertexte de l’**expérience**, qui s’affiche ici, pour ouvrir la page MLflow listant les exécutions de votre expérience. Chaque exécution se voit affecter un nom unique.
-1. Sélectionnez l’exécution la plus récente, puis affichez ses détails. Notez que vous pouvez développer des sections pour voir les **paramètres** et les **métriques** journalisés. De plus, vous pouvez voir également les détails du modèle formé et enregistré.
+1. Sélectionnez l’exécution la plus récente, puis affichez-en les détails. Notez que vous pouvez développer des sections pour voir les **paramètres** et les **métriques** journalisés. De plus, vous pouvez voir également les détails du modèle formé et enregistré.
 
     > **Conseil** : Vous pouvez également utiliser l’icône **Expériences MLflow** dans le menu de la barre latérale à droite de ce notebook pour voir les détails des exécutions des expériences.
 
