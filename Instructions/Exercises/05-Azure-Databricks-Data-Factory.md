@@ -13,7 +13,7 @@ Cet exercice devrait prendre environ **40** minutes.
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le Portail Azure.
+Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -31,7 +31,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
+5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -107,7 +107,7 @@ Pour utiliser Azure Databricks à partir d’un pipeline Azure Data Factory, v
 
 ### Créer un service lié dans Azure Data Factory
 
-1. Revenez au portail Azure et, dans le groupe de ressources **dp203-*xxxxxxx***, sélectionnez la ressource Azure Data Factory **adf*xxxxxxx***.
+1. Revenez au portail Azure et, dans le groupe de ressources **msl-*xxxxxxx***, sélectionnez la ressource Azure Data Factory **adf*xxxxxxx***.
 2. Dans la page **Vue d’ensemble**, sélectionnez **Lancer Studio** pour ouvrir Azure Data Factory Studio. Connectez-vous si vous y êtes invité.
 3. Dans Azure Data Factory Studio, utilisez l’icône **>>** pour développer le volet de navigation à gauche. Sélectionnez ensuite la page **Gérer**.
 4. Dans la page **Gérer**, sous l’onglet **Services liés**, sélectionnez **+ Nouveau** pour ajouter un nouveau service lié.
@@ -158,6 +158,7 @@ Maintenant que vous avez créé un service lié, vous pouvez l’utiliser dans u
     > **Remarque** : si votre pipeline échoue, il se peut que le quota de votre abonnement soit insuffisant dans la région où votre espace de travail Azure Databricks est approvisionné pour créer un cluster de travail. Pour plus d’informations, consultez l’article [La limite de cœurs du processeur empêche la création du cluster](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si cela se produit, vous pouvez essayer de supprimer votre espace de travail et d’en créer un dans une autre région. Vous pouvez spécifier une région comme paramètre pour le script d’installation comme suit : `./setup.ps1 eastus`
 
 4. Une fois l’exécution réussie, sélectionnez son nom pour afficher les détails de l’exécution. Ensuite, dans la page **Traiter les données avec Databricks**, dans la section **Exécutions d’activité**, sélectionnez l’activité **Traiter les données** et utilisez son icône de ***sortie*** pour afficher le code JSON de sortie de l’activité, qui doit ressembler à ceci :
+
     ```json
     {
         "runPageUrl": "https://adb-..../run/...",
