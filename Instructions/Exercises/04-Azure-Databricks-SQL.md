@@ -31,7 +31,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
+5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -119,6 +119,6 @@ Les tableaux de bord constituent un excellent moyen de partager des tables de do
 
 ## Nettoyage
 
-Dans le portail Azure Databricks, sur la page **Entrepôts SQL**, sélectionnez votre entrepôt SQL et sélectionnez **&#9632; Arrêtez** pour l’arrêter.
+Dans le portail Azure Databricks, sur la page **Entrepôts SQL**, sélectionnez votre entrepôt SQL et sélectionnez **&#9632; Arrêter** pour l’arrêter.
 
 Si vous avez terminé l’exploration d’Azure Databricks, vous pouvez supprimer les ressources que vous avez créées afin d’éviter des coûts Azure non nécessaires et de libérer de la capacité dans votre abonnement.
