@@ -17,7 +17,7 @@ Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dan
 
 > **Remarque** : Pour cet exercice, vous avez besoin d’un espace de travail Azure Databricks **Premium** dans une région où la *mise à disposition de modèles* est prise en charge. Pour plus d’informations sur les fonctionnalités régionales d’Azure Databricks, consultez [Régions Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions). Si vous disposez déjà d’un espace de travail Azure Databricks de type *Premium* ou *Essai* dans une région appropriée, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice comprend un script qui permet de configurer un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul nécessaires au bon déroulement de cet exercice. Cela suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’autorisations ou d’un quota insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Azure.
+Cet exercice comprend un script qui permet de provisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -35,7 +35,7 @@ Cet exercice comprend un script qui permet de configurer un nouvel espace de tra
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui provisionne un espace de travail Azure Databricks dans une région disponible :
+5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -48,10 +48,10 @@ Cet exercice comprend un script qui permet de configurer un nouvel espace de tra
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec la version 13.3 LTS **<u>ML</u>** ou une version ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice, et ignorer cette procédure.
+> **Conseil** : Si vous disposez déjà d’un cluster avec une version 13.3 LTS **<u>ML</u>** ou ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice et ignorer cette procédure.
 
-1. Dans le portail Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou au groupe de ressources contenant votre espace de travail Azure Databricks existant)
-1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx***, si vous avez utilisé le script d’installation pour la créer).
+1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant)
+1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx*** si vous avez utilisé le script d’installation pour la créer).
 1. Dans la page **Vue d’ensemble** de votre espace de travail, utilisez le bouton **Lancer l’espace de travail** pour ouvrir votre espace de travail Azure Databricks dans un nouvel onglet de navigateur et connectez-vous si vous y êtes invité.
 
     > **Conseil** : lorsque vous utilisez le portail de l’espace de travail Databricks, plusieurs conseils et notifications peuvent s’afficher. Ignorez-les et suivez les instructions fournies pour effectuer les tâches de cet exercice.
@@ -62,11 +62,11 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Stratégie** : Non restreint
     - **Mode cluster** : nœud unique
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
-    - **Version de Databricks Runtime** : *Sélectionnez l’édition **<u>ML</u>** de la dernière version non-bêta du runtime (**Pas** une version de runtime standard) qui :*
+    - **Version du runtime Databricks** : *Sélectionnez l’édition **<u>ML</u>** de la dernière version non bêta du runtime (**Not** version du runtime standard) qui :*
         - *N’utilise **pas** de GPU*
-        - *Inclut Scala > **2.11***
-        - *Inclut Spark > **3.4***
-    - **Utiliser l’accélération Photon** : <u>Dé</u>coché
+        - *Inclut Scala > **2.11***
+        - *Inclut Spark > **3.4***
+    - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
     - **Type de nœud** : Standard_DS3_v2
     - **Arrêter après** *20* **minutes d’inactivité**
 
@@ -76,7 +76,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 ## Créer un notebook
 
-Vous allez exécuter du code qui utilise la bibliothèque Spark MLLib pour former un modèle Machine Learning. La première étape consiste donc à créer un notebook dans votre espace de travail.
+Vous allez exécuter du code qui utilise la bibliothèque Spark MLLib pour entraîner un modèle Machine Learning. La première étape consiste donc à créer un notebook dans votre espace de travail.
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
 1. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par **MLflow**, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster, s’il ne l’est pas déjà. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
@@ -87,7 +87,7 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
 
 > **Citation** : Le jeu de données sur les manchots utilisé dans cet exercice est un sous-ensemble des données collectées et publiées par [ Kristen Gorman](https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php) et la [station Palmer en Antarctique](https://pal.lternet.edu/), qui fait partie du [réseau mondial de recherche écologique à long terme (LTER)](https://lternet.edu/).
 
-1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes d’*interpréteur de commandes* pour télécharger les données relatives aux manchots de GitHub vers le système de fichiers Databricks (DBFS) utilisé par votre cluster.
+1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes d’*interpréteur de commandes* pour télécharger les données relatives aux manchots à partir de GitHub dans le système de fichiers utilisé par votre cluster.
 
     ```bash
     %sh
@@ -96,12 +96,12 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
     wget -O /dbfs/mlflow_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
-1. Utilisez l’option de menu **&#9656; Exécuter la cellule** en haut à droite de la cellule suivante pour l’exécuter. Attendez ensuite la fin du travail Spark exécuté par le code.
+1. Utilisez l’option de menu **&#9656 ; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
 
-1. Préparez à présent les données pour le Machine Learning. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Puis, dans la nouvelle cellule, entrez et exécutez le code suivant pour :
-    - Supprimer les lignes incomplètes
+1. Préparez maintenant les données pour le Machine Learning. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour :
+    - Supprimer toutes les lignes incomplètes
     - Appliquer les types de données appropriés
-    - Voir un échantillon aléatoire des données
+    - Afficher un échantillon aléatoire des données
     - Fractionnez les données en deux jeux de données : l’un pour la formation et l’autre pour les tests.
 
 
@@ -187,7 +187,7 @@ Vous pouvez utiliser les mêmes bibliothèques et techniques que celles que vous
     ```
 
 1. À la fin de l’exécution de l’expérience, sous la cellule de code, utilisez si nécessaire le bouton **&#9656;** pour développer les détails de l’**exécution de MLflow**. Utilisez le lien hypertexte de l’**expérience**, qui s’affiche ici, pour ouvrir la page MLflow listant les exécutions de votre expérience. Chaque exécution se voit affecter un nom unique.
-1. Sélectionnez l’exécution la plus récente, puis affichez-en les détails. Notez que vous pouvez développer des sections pour voir les **paramètres** et les **métriques** journalisés. De plus, vous pouvez voir également les détails du modèle formé et enregistré.
+1. Sélectionnez l’exécution la plus récente, puis affichez ses détails. Notez que vous pouvez développer des sections pour voir les **paramètres** et les **métriques** journalisés. De plus, vous pouvez voir également les détails du modèle formé et enregistré.
 
     > **Conseil** : Vous pouvez également utiliser l’icône **Expériences MLflow** dans le menu de la barre latérale à droite de ce notebook pour voir les détails des exécutions des expériences.
 
@@ -299,7 +299,7 @@ Dans la page du point de terminaison **predict-penguin**, dans le menu **&#8285;
 
 ## Nettoyage
 
-Dans le portail Azure Databricks, dans la page **Calcul**, sélectionnez votre cluster, puis sélectionnez **&#9632; Terminer** pour l’arrêter.
+Dans le portail Azure Databricks, sur la page **Calcul**, sélectionnez votre cluster et sélectionnez **&#9632; Arrêter** pour l’arrêter.
 
 Si vous avez fini de découvrir Azure Databricks, vous pouvez supprimer les ressources que vous avez créées pour éviter des coûts Azure inutiles, et libérer de la capacité dans votre abonnement.
 
