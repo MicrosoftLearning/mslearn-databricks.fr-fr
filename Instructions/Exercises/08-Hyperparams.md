@@ -87,7 +87,7 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
 
 > **Citation** : Le jeu de données sur les manchots utilisé dans cet exercice est un sous-ensemble des données collectées et publiées par [ Kristen Gorman](https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php) et la [station Palmer en Antarctique](https://pal.lternet.edu/), qui fait partie du [réseau mondial de recherche écologique à long terme (LTER)](https://lternet.edu/).
 
-1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes *shell* pour télécharger les données des manchots à partir de GitHub dans le système de fichiers Databricks (DBFS) utilisé par votre cluster.
+1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes d’*interpréteur de commandes* pour télécharger les données relatives aux manchots à partir de GitHub dans le système de fichiers utilisé par votre cluster.
 
     ```bash
     %sh
@@ -96,7 +96,7 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
     wget -O /dbfs/hyperopt_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
-1. Utilisez l’option de menu **&#9656; Exécuter la cellule** en haut à droite de la cellule suivante pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
+1. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
 1. Préparez maintenant les données pour le Machine Learning. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour :
     - Supprimer toutes les lignes incomplètes
     - Appliquer les types de données appropriés
@@ -228,7 +228,7 @@ Outre l’utilisation des exécutions d’expériences MLflow pour journaliser l
 
 ## Nettoyage
 
-Dans le portail Azure Databricks, dans la page **Calcul**, sélectionnez votre cluster, puis sélectionnez **&#9632; Terminer** pour l’arrêter.
+Dans le portail Azure Databricks, sur la page **Calcul**, sélectionnez votre cluster et sélectionnez **&#9632; Arrêter** pour l’arrêter.
 
 Si vous avez terminé l’exploration d’Azure Databricks, vous pouvez supprimer les ressources que vous avez créées afin d’éviter des coûts Azure non nécessaires et de libérer de la capacité dans votre abonnement.
 
