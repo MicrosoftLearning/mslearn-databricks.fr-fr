@@ -13,7 +13,7 @@ Cet exercice devrait prendre environ **30** minutes.
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks *Premium* ou *Essai*, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice. En outre, il suppose que votre compte utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
+Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisant, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -31,7 +31,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
+5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -119,6 +119,6 @@ Les tableaux de bord constituent un excellent moyen de partager des tables de do
 
 ## Nettoyage
 
-Dans le portail Azure Databricks, sur la page **Entrepôts SQL**, sélectionnez votre entrepôt SQL et sélectionnez **&#9632; Arrêter** pour l’arrêter.
+Dans le portail Azure Databricks, sur la page **Entrepôts SQL**, sélectionnez votre entrepôt SQL et sélectionnez **&#9632; Arrêtez** pour l’arrêter.
 
 Si vous avez terminé l’exploration d’Azure Databricks, vous pouvez supprimer les ressources que vous avez créées afin d’éviter des coûts Azure non nécessaires et de libérer de la capacité dans votre abonnement.

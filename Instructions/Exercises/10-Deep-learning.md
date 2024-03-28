@@ -17,7 +17,7 @@ Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dan
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
+Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -35,7 +35,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
+5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -50,7 +50,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 > **Conseil** : Si vous disposez déjà d’un cluster avec une version 13.3 LTS **<u>ML</u>** ou ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice et ignorer cette procédure.
 
-1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant).
+1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant)
 1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx*** si vous avez utilisé le script d’installation pour la créer).
 1. Dans la page **Vue d’ensemble** de votre espace de travail, utilisez le bouton **Lancer l’espace de travail** pour ouvrir votre espace de travail Azure Databricks dans un nouvel onglet de navigateur et connectez-vous si vous y êtes invité.
 
@@ -83,11 +83,11 @@ Vous allez exécuter du code qui utilise la bibliothèque Spark MLLib pour entra
 
 ## Ingérer et préparer les données
 
-Le scénario de cet exercice est basé sur des observations de manchots en Antarctique. L’objectif est d’entraîner un modèle Machine Learning pour prédire l’espèce d’un manchot observé sur la base de sa localisation et de ses mesures corporelles.
+Le scénario de cet exercice est basé sur des observations de manchots en Antarctique. L’objectif est de former un modèle Machine Learning pour prédire l’espèce d’un manchot observé en fonction de sa localisation et de ses mensurations corporelles.
 
 > **Citation** : Le jeu de données sur les manchots utilisé dans cet exercice est un sous-ensemble des données collectées et publiées par [ Kristen Gorman](https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php) et la [station Palmer en Antarctique](https://pal.lternet.edu/), qui fait partie du [réseau mondial de recherche écologique à long terme (LTER)](https://lternet.edu/).
 
-1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes *shell* pour télécharger les données des manchots à partir de GitHub dans le système de fichiers Databricks (DBFS) utilisé par votre cluster.
+1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes d’*interpréteur de commandes* pour télécharger les données relatives aux manchots à partir de GitHub dans le système de fichiers utilisé par votre cluster.
 
     ```bash
     %sh
@@ -96,7 +96,7 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
     wget -O /dbfs/deepml_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
-1. Utilisez l’option de menu **&#9656; Exécuter la cellule** en haut à droite de la cellule suivante pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
+1. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
 1. Préparez maintenant les données pour le Machine Learning. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour :
     - Supprimer toutes les lignes incomplètes
     - Encoder le nom de l’île (chaîne) en tant qu’entier
@@ -495,4 +495,4 @@ Il se peut que vous deviez faire défiler l’écran pour voir toute la sortie, 
 
 Dans le portail Azure Databricks, sur la page **Calcul**, sélectionnez votre cluster et sélectionnez **&#9632; Arrêter** pour l’arrêter.
 
-Si vous avez terminé l’exploration d’Azure Databricks, vous pouvez supprimer les ressources que vous avez créées afin d’éviter des coûts Azure non nécessaires et de libérer de la capacité dans votre abonnement.
+Si vous avez terminé d’explorer Azure Databricks, vous pouvez supprimer les ressources que vous avez créées pour éviter les coûts Azure inutiles et libérer de la capacité dans votre abonnement.

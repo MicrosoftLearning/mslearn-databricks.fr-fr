@@ -73,7 +73,7 @@ Nous allons maintenant créer un notebook Spark et importer les données avec le
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
 1. Remplacez le nom du notebook par défaut (**Notebook sans titre *[date]***) par **Explorer Delta Lake** et, dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
-1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes *shell* pour télécharger les fichiers de données à partir de GitHub dans le système de fichiers Databricks (DBFS) utilisé par votre cluster.
+1. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes du *shell* pour télécharger des fichiers de données depuis GitHub dans le système de fichiers utilisé par votre cluster.
 
     ```python
     %sh
@@ -82,7 +82,7 @@ Nous allons maintenant créer un notebook Spark et importer les données avec le
     wget -O /dbfs/delta_lab/products.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv
     ```
 
-1. Utilisez l’option de menu **&#9656; Exécuter la cellule** en haut à droite de la cellule suivante pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
+1. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
 1. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour charger les données à partir du fichier et afficher les 10 premières lignes.
 
     ```python
