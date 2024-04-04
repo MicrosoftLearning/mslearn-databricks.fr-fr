@@ -13,7 +13,7 @@ Ce labo prend environ **40** minutes.
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
+Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota insuffisant ou d’autorisations insuffisantes, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le Portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -139,7 +139,7 @@ Les données ont été chargées dans un dataframe. Nous allons les conserver da
 
 Les modifications de données sont journalisées, ce qui vous permet d’utiliser les fonctionnalités de *voyage dans le temps* de Delta Lake pour afficher les versions précédentes des données. 
 
-1. Dans une nouvelle cellule de code, utilisez le code suivant pour afficher la version originale des données sur les produits :
+1. Dans une nouvelle cellule de code, utilisez le code suivant pour afficher la version d’origine des données sur les produits :
 
     ```python
    new_df = spark.read.format("delta").option("versionAsOf", 0).load(delta_table_path)
@@ -156,8 +156,8 @@ Les modifications de données sont journalisées, ce qui vous permet d’utilise
 
 Jusqu’à présent, vous avez travaillé avec des tables delta en chargeant les données du dossier contenant les fichiers Parquet sur lesquels la table est basée. Vous pouvez définir des *tables de catalogue* qui encapsulent les données et fournissent une entité de table nommée que vous pouvez référencer dans le code SQL. Spark prend en charge deux types de tables de catalogue pour delta lake :
 
-- Les tables *externes* définies par le chemin d’accès aux fichiers Parquet contenant les données de la table.
-- Les tables *managées* définies dans le metastore Hive pour le cluster Spark.
+- Les tables *externes* définies par le chemin d’accès aux fichiers contenant les données de la table.
+- Tables *managées* définies dans le metastore.
 
 ### Créer une table externe
 
@@ -188,7 +188,7 @@ Jusqu’à présent, vous avez travaillé avec des tables delta en chargeant les
    spark.sql("DESCRIBE EXTENDED AdventureWorks.ProductsManaged").show(truncate=False)
     ```
 
-    Vous n’avez pas spécifié de chemin d’accès pour les fichiers Parquet utilisés par la table. Cela est géré pour vous dans le metastore Hive et affiché dans la propriété **Location** de la description de la table (dans le chemin d’accès **dbfs :/user/hive/warehouse/**).
+    Vous n’avez spécifié aucun chemin d’accès pour les fichiers Parquet utilisés par la table. Cela est géré pour vous dans le metastore Hive et affiché dans la propriété **Location** de la description de table.
 
 1. Utilisez le code suivant pour interroger la table managée, en notant que la syntaxe est identique à celle d’une table managée :
 
