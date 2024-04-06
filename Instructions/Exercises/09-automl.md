@@ -15,9 +15,9 @@ Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dan
 
 ## Provisionner un espace de travail Azure Databricks
 
-> **Remarque** : Pour cet exercice, vous avez besoin d’un espace de travail Azure Databricks **Premium** dans une région où le *Modèle serving* est pris en charge. Consultez les [régions Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions) pour plus d’informations sur les fonctionnalités régionales d’Azure Databricks. Si vous disposez déjà d’un espace de travail Azure Databricks *Premium* ou *Essai* dans une région appropriée, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
+> **Remarque** : Pour cet exercice, vous avez besoin d’un espace de travail Azure Databricks **Premium** dans une région où la *mise à disposition de modèles* est prise en charge. Pour plus d’informations sur les fonctionnalités régionales d’Azure Databricks, consultez [Régions Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions). Si vous disposez déjà d’un espace de travail Azure Databricks de type *Premium* ou *Essai* dans une région appropriée, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région où votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de créer un espace de travail Azure Databricks de manière interactive dans le portail Microsoft Azure.
+Cet exercice comprend un script qui permet de provisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisant, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -35,7 +35,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Après avoir cloné le référentiel, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
+5. Une fois le référentiel cloné, entrez la commande suivante pour exécuter le script **setup.ps1**, qui approvisionne un espace de travail Azure Databricks dans une région disponible :
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -50,7 +50,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 > **Conseil** : Si vous disposez déjà d’un cluster avec une version 13.3 LTS **<u>ML</u>** ou ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice et ignorer cette procédure.
 
-1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant).
+1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant)
 1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx*** si vous avez utilisé le script d’installation pour la créer).
 1. Dans la page **Vue d’ensemble** de votre espace de travail, utilisez le bouton **Lancer l’espace de travail** pour ouvrir votre espace de travail Azure Databricks dans un nouvel onglet de navigateur et connectez-vous si vous y êtes invité.
 
@@ -129,9 +129,9 @@ Après avoir exécuté une expérience AutoML, vous pouvez explorer le modèle l
     - **Point de terminaison**: classify-penguin
     - **Taille de calcul** : Small
 
-    Le point de terminaison de service est hébergé dans un nouveau cluster, dont la création peut prendre plusieurs minutes.
+    Le point de terminaison de mise à disposition est hébergé dans un nouveau cluster, dont la création peut prendre plusieurs minutes.
   
-1. Lorsque le point de terminaison a été créé, utilisez le bouton **Interroger le point de terminaison** en haut à droite pour ouvrir une interface à partir de laquelle vous pouvez tester le point de terminaison. Ensuite, dans l’interface de test, sous l’onglet **Navigateur**, entrez la requête JSON suivante et utilisez le bouton **Envoyer une requête** pour appeler le point de terminaison et générer une prédiction.
+1. Une fois le point de terminaison créé, utilisez le bouton **Interroger le point de terminaison** en haut à droite pour ouvrir une interface à partir de laquelle vous pouvez tester le point de terminaison. Dans l’interface de test, sous l’onglet **Navigateur**, entrez la requête JSON suivante, puis utilisez le bouton **Envoyer la requête** pour appeler le point de terminaison et générer une prédiction.
 
     ```json
     {
@@ -147,7 +147,7 @@ Après avoir exécuté une expérience AutoML, vous pouvez explorer le modèle l
     }
     ```
 
-1. Expérimentez avec quelques valeurs différentes pour les caractéristiques du manchot et observez les résultats retournés. Fermez ensuite l’interface de test.
+1. Faites des essais en utilisant différentes valeurs relatives aux caractéristiques des manchots, puis observez les résultats retournés. Fermez ensuite l’interface de test.
 
 ## Supprimer le point de terminaison
 
