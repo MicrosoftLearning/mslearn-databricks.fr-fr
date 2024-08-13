@@ -1,9 +1,9 @@
 ---
 lab:
-  title: "Automatisation de l’ingestion et du traitement des données à l’aide d’Azure\_Databricks"
+  title: "Automatiser l’ingestion et le traitement des données à l’aide d’Azure\_Databricks"
 ---
 
-# Automatisation de l’ingestion et du traitement des données à l’aide d’Azure Databricks
+# Automatiser l’ingestion et le traitement des données à l’aide d’Azure Databricks
 
 Databricks Jobs est un service puissant qui permet l’automatisation des workflows d’ingestion et de traitement des données. Il permet l’orchestration de pipelines de données complexes, qui peuvent inclure des tâches telles que l’ingestion de données brutes à partir de différentes sources, la transformation de ces données à l’aide de Delt Live Tables et leur persistance vers Delta Lake pour une analyse plus approfondie. Avec Azure Databricks, les utilisateurs peuvent planifier et exécuter automatiquement leurs tâches de traitement des données, ce qui garantit que les données sont toujours à jour et disponibles pour les processus décisionnels.
 
