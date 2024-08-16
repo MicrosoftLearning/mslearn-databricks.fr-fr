@@ -5,11 +5,11 @@ lab:
 
 # Implémenter des workflows CI/CD avec Azure Databricks
 
-L’implémentation de pipelines d’intégration continue (CI) et de déploiement continu (CD) avec Azure Databricks et Azure DevOps ou Azure Databricks et GitHub implique la configuration d’une série d’étapes automatisées pour garantir que les modifications de code soient intégrées, testées et déployées efficacement. Le processus inclut généralement la connexion à un référentiel Git, l’exécution de travaux à l’aide d’Azure Pipelines pour générer et effectuer le test unitaire du code, ou encore le déploiement des artefacts de build à utiliser dans les notebooks Databricks. Ce workflow permet un cycle de développement robuste, pour une intégration et une livraison continues qui s’alignent sur les pratiques DevOps modernes.
+L’implémentation de workflows CI/CD avec GitHub Actions et Azure Databricks peut simplifier votre processus de développement et améliorer l’automatisation. GitHub Actions fournit une plateforme puissante pour automatiser les workflows logiciels, notamment l’intégration continue (CI) et la livraison continue (CD). Lorsqu’ils sont intégrés à Azure Databricks, ces workflows peuvent exécuter des tâches de données complexes, telles que l’exécution de notebooks ou le déploiement de mises à jour dans des environnements Databricks. Par exemple, vous pouvez utiliser GitHub Actions pour automatiser le déploiement de notebooks Databricks, gérer les chargements du système de fichiers Databricks et configurer l’interface CLI Databricks au sein de vos workflows. Cette intégration permet un cycle de développement plus efficace et résistant aux erreurs, en particulier pour les applications pilotées par les données.
 
 Ce labo prend environ **40** minutes.
 
->**Remarque :** vous avez besoin d’un compte Github et d’un accès Azure DevOps pour effectuer cet exercice.
+>**Remarque :** vous avez besoin d’un compte Github pour effectuer cet exercice.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -89,141 +89,163 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 3. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
    
-## Configurer un référentiel GitHub et un projet Azure DevOps
+## Configurer un référentiel GitHub
 
-Une fois que vous avez connecté un référentiel GitHub à un projet Azure DevOps, vous pouvez configurer des pipelines CI qui se déclenchent avec les modifications apportées à votre référentiel.
+Une fois que vous avez connecté un référentiel GitHub à un espace de travail Databricks, vous pouvez configurer des pipelines CI/CD dans GitHub Actions qui se déclenchent avec les modifications apportées à votre référentiel.
 
 1. Accédez à votre [compte GitHub](https://github.com/) et créez un référentiel pour votre projet.
 
 2. Clonez le référentiel sur votre ordinateur local à l’aide de `git clone`.
 
-3. Enregistrez le [fichier CSV](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/sample_sales.csv) sur votre référentiel local et validez vos modifications.
+3. Téléchargez les fichiers requis pour cet exercice dans votre référentiel local :
+   - [Fichier CSV](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/sample_sales.csv)
+   - [Databricks Notebook](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/sample_sales_notebook.dbc)
+   - [Fichier de configuration du travail](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/job-config.json)
 
-4. Téléchargez le [notebook Databricks](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/sample_sales_notebook.dbc) qui sera utilisé pour lire le fichier CSV et effectuer la transformation des données. Validez les modifications :
+   Commitez et poussez (push) les changements.
 
-5. Accédez au [portail Azure DevOps](https://azure.microsoft.com/en-us/products/devops/) et créez un projet.
+## Configurer les secrets du référentiel
 
-6. Dans votre projet Azure DevOps, accédez à la section **Référentiel** et sélectionnez **Importer** pour la connecter à votre référentiel GitHub.
+Les secrets sont des variables que vous créez dans une organisation, un dépôt ou un environnement de dépôt. Les secrets que vous créez peuvent être utilisés dans les workflows GitHub Actions. GitHub Actions peut uniquement lire un secret si vous incluez explicitement le secret dans un flux de travail.
 
-7. Dans la barre de gauche, accédez aux **paramètres du projet > Connexions de service**.
+Lorsque les workflows GitHub Actions doivent accéder aux ressources d’Azure Databricks, les informations d’identification d’authentification sont stockées en tant que variables chiffrées à utiliser avec les pipelines CI/CD.
 
-8. Sélectionnez **Créer une connexion de service**, puis **Azure Resource Manager**.
+Avant de créer des secrets de référentiel, vous devez générer un jeton d’accès personnel dans Azure Databricks :
 
-9. Dans **Méthode d’authentification**, sélectionnez **Fédération des identités de charge de travail (automatique)**. Cliquez sur **Suivant**.
+1. Dans votre espace de travail Azure Databricks, sélectionnez votre nom d’utilisateur Azure Databricks dans la barre du haut, puis sélectionnez **Paramètres** dans la liste déroulante.
 
-10. Dans **Niveau d’étendue**, sélectionnez **Abonnement**. Sélectionnez l’abonnement et le groupe de ressources où vous avez créé votre espace de travail Databricks.
+2. Sélectionnez **Développeur**.
 
-11. Saisissez un nom pour votre connexion de service, puis cochez la case **Accorder une autorisation d’accès à tous les pipelines**. Cliquez sur **Enregistrer**.
+3. À côté de **Jetons d’accès**, sélectionnez **Gérer**.
 
-Votre projet DevOps a maintenant accès à votre espace de travail Databricks et vous pouvez le connecter à vos pipelines.
+4. Sélectionnez **Générer un nouveau jeton**, puis **Générer**.
 
-## Configurer un pipeline CI
+5. Copiez le jeton affiché dans un emplacement sécurisé, puis sélectionnez **Terminé**.
 
-1. Dans la barre de gauche, accédez à **Pipelines** et sélectionnez **Créer un pipeline**.
+6. Dans la page de votre référentiel, sélectionnez l’onglet **Paramètres**.
 
-2. Sélectionnez **GitHub** comme source et sélectionnez votre référentiel.
+   ![Onglet Paramètres GitHub](./images/github-settings.png)
 
-3. Dans le volet **Configurer votre pipeline**, sélectionnez **Pipeline de démarrage** et utilisez la configuration YAML suivante pour le pipeline CI :
+7. Dans la barre latérale gauche, sélectionnez **Secrets et variables**, puis sélectionnez **Actions**.
 
-```yaml
-trigger:
-- main
+8. Sélectionnez **Nouveau secret de référentiel** et ajoutez chacune de ces variables :
+   - **Nom :** DATABRICKS_HOST **Secret :** ajoutez l’URL de votre espace de travail Databricks.
+   - **Nom :** DATABRICKS_TOKEN **Secret :** ajoutez le jeton d’accès généré précédemment.
 
-pool:
-  vmImage: 'ubuntu-latest'
+## Configurer des pipelines d’intégration continue/de livraison continue
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+Maintenant que vous avez stocké les variables nécessaires pour accéder à votre espace de travail Azure Databricks à partir de GitHub, vous allez créer des workflows pour automatiser l’ingestion et le traitement des données, qui se déclencheront chaque fois que le référentiel sera mis à jour.
 
-- script: |
-    pip install databricks-cli
-  displayName: 'Install Databricks CLI'
+1. Dans la page de votre référentiel, sélectionnez l’onglet **Actions**.
 
-- script: |
-    databricks configure --token <<EOF
-    <your-databricks-host>
-    <your-databricks-token>
-    EOF
-  displayName: 'Configure Databricks CLI'
+    ![Onglet GitHub Actions](./images/github-actions.png)
 
-- script: |
-    databricks fs cp dbfs:/FileStore/sample_sales.csv . --overwrite
-  displayName: 'Download Sample Data from DBFS'
-```
+2. Sélectionnez **configurer vous-même un workflow** et entrez le code suivant :
 
-4. Remplacez `<your-databricks-host>` et `<your-databricks-token>` par votre URL et votre jeton d’hôte Databricks réels. Cela configure l’interface CLI Databricks avant de tenter de l’utiliser.
+     ```yaml
+    name: CI Pipeline for Azure Databricks
 
-5. Sélectionnez **Enregistrer et exécuter**.
+    on:
+      push:
+        branches:
+          - main
+      pull_request:
+        branches:
+          - main
 
-Ce fichier YAML configure un pipeline CI déclenché par des modifications apportées à la branche `main` de votre référentiel. Le pipeline configure un environnement Python, installe l’interface CLI Databricks et télécharge les exemples de données à partir de votre espace de travail Databricks. Il s’agit d’une configuration courante pour les workflows CI.
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
 
-## Configurer un pipeline CD
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
 
-1. Dans la barre de gauche, accédez à **Pipelines** > Versions, puis sélectionnez **Créer une version**.
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.x'
 
-2. Sélectionnez votre pipeline de build comme source d’artefact.
+        - name: Install Databricks CLI
+          run: |
+            pip install databricks-cli
 
-3. Ajoutez une étape et configurez les tâches à déployer sur Azure Databricks :
+        - name: Configure Databricks CLI
+          run: |
+            databricks configure --token <<EOF
+            ${{ secrets.DATABRICKS_HOST }}
+            ${{ secrets.DATABRICKS_TOKEN }}
+            EOF
 
-```yaml
-stages:
-- stage: Deploy
-  jobs:
-  - job: DeployToDatabricks
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-
-    - script: |
-        pip install databricks-cli
-      displayName: 'Install Databricks CLI'
-
-    - script: |
-        databricks configure --token <<EOF
-        <your-databricks-host>
-        <your-databricks-token>
-        EOF
-      displayName: 'Configure Databricks CLI'
-
-    - script: |
-        databricks workspace import_dir /path/to/notebooks /Workspace/Notebooks
-      displayName: 'Deploy Notebooks to Databricks'
-```
-
-Avant d’exécuter ce pipeline, remplacez `/path/to/notebooks` par le chemin d’accès au répertoire où vous disposez de votre notebook dans votre référentiel et `/Workspace/Notebooks` par le chemin d’accès au fichier où vous souhaitez enregistrer le notebook dans votre espace de travail Databricks.
-
-4. Sélectionnez **Enregistrer et exécuter**.
-
-## Exécuter les pipelines
-
-1. Dans votre référentiel local, ajoutez la ligne suivante à la fin du fichier `sample_sales.csv` :
-
-     ```sql
-    2024-01-01,ProductG,1,500
+        - name: Download Sample Data from DBFS
+          run: databricks fs cp dbfs:/FileStore/sample_sales.csv . --overwrite
      ```
 
-2. Validez et envoyez (push) vos modifications au référentiel GitHub distant.
+Ce code installe et configure l’interface CLI Databricks et télécharge les exemples de données dans votre référentiel chaque fois qu’une validation est envoyée (push) ou qu’une demande de tirage (pull request) est fusionnée.
 
-3. Les modifications apportées au référentiel déclenchent le pipeline CI. Vérifiez que l’exécution du pipeline CI se termine avec succès.
+3. Nommez le workflow **Pipeline CI** et sélectionnez **Valider les modifications**. Le pipeline s’exécute automatiquement et vous pouvez vérifier son état sous l’onglet **Actions**.
 
-4. Créez une version dans le pipeline de mise en production et déployez les notebooks sur Databricks. Vérifiez que les notebooks sont déployés et exécutés correctement dans votre espace de travail Databricks.
+Une fois le workflow terminé, il est temps d’effectuer les configurations de votre pipeline CD.
+
+4. Accédez à la page de votre espace de travail, sélectionnez **Calcul**, puis sélectionnez votre cluster.
+
+5. Dans la page du cluster, sélectionnez **Plus ...**, puis **Afficher le code JSON**. Copiez l’ID du cluster.
+
+6. Ouvrez `job-config.json` dans votre référentiel et remplacez `your_cluster_id` par l’ID du cluster que vous venez de copier. Remplacez également `/Workspace/Users/your_username/your_notebook` par le chemin d’accès dans votre espace de travail dans lequel vous souhaitez stocker le notebook utilisé dans le pipeline. Validez les modifications :
+
+> **Remarque :** si vous accédez à l’onglet **Actions**, vous verrez que le pipeline CI a recommencé à s’exécuter. Étant donné qu’il est censé se déclencher chaque fois qu’une validation est envoyée, la modification de `job-config.json` déploie le pipeline comme prévu.
+
+7. Sous l’onglet **Actions**, créez un workflow nommé **Pipeline CD** et entrez le code suivant :
+
+     ```yaml
+    name: CD Pipeline for Azure Databricks
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.x'
+
+        - name: Install Databricks CLI
+          run: pip install databricks-cli
+
+        - name: Configure Databricks CLI
+          run: |
+            databricks configure --token <<EOF
+            ${{ secrets.DATABRICKS_HOST }}
+            ${{ secrets.DATABRICKS_TOKEN }}
+            EOF
+        - name: Upload Notebook to DBFS
+          run: databricks fs cp /path/to/your/notebook /Workspace/Users/your_username/your_notebook --overwrite
+          env:
+            DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        - name: Run Databricks Job
+          run: |
+            databricks jobs create --json-file job-config.json
+            databricks jobs run-now --job-id $(databricks jobs list | grep 'CD pipeline' | awk '{print $1}')
+          env:
+            DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+     ```
+
+Avant de valider les modifications, remplacez `/path/to/your/notebook` par le chemin d’accès au fichier de votre notebook dans votre référentiel et `/Workspace/Users/your_username/your_notebook` par le chemin d’accès au fichier où vous souhaitez importer le notebook dans votre espace de travail Azure Databricks.
+
+Ce code installe et configure à nouveau l’interface CLI Databricks, importe le notebook dans votre système de fichiers Databricks, puis crée et exécute un travail que vous pouvez surveiller dans la page **Workflows** de votre espace de travail. Examinez la sortie et vérifiez que l’exemple de données a été  modifié.
 
 ## Nettoyage
 
 Dans le portail Azure Databricks, sur la page **Calcul**, sélectionnez votre cluster et sélectionnez **&#9632; Arrêter** pour l’arrêter.
 
 Si vous avez terminé d’explorer Azure Databricks, vous pouvez supprimer les ressources que vous avez créées pour éviter les coûts Azure inutiles et libérer de la capacité dans votre abonnement.
-
-
-
-
-
-
-
