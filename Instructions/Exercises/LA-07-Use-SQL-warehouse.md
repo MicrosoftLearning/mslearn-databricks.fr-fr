@@ -66,54 +66,41 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
     ```
 
 4. Sélectionnez le bouton **►Exécuter** pour exécuter le code SQL.
-5. Lorsque le code a été correctement exécuté, dans le volet **Navigateur de schémas**, sélectionnez le bouton d’actualisation en bas du volet pour actualiser la liste. Développez ensuite **hive_metastore** et **retail_db**, puis vérifiez que la base de données a été créée, mais ne contient aucune table.
+5. Lorsque le code a été correctement exécuté, dans le volet **Navigateur de schémas**, sélectionnez le bouton d’actualisation en haut du volet pour actualiser la liste. Développez ensuite **hive_metastore** et **retail_db**, puis vérifiez que la base de données a été créée, mais ne contient aucune table.
 
 Vous pouvez utiliser la base de données **default** pour vos tables, mais lors de la création d’un magasin de données analytiques, il est préférable de créer des bases de données personnalisées contenant des données spécifiques.
 
 ## Créer une table
 
 1. Téléchargez le fichier [**products.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv) sur votre ordinateur local, puis enregistrez-le en tant que **products.csv**.
-1. Dans le portail de l’espace de travail Azure Databricks, dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Chargement de fichiers** et chargez le fichier **products.csv** que vous avez téléchargé sur votre ordinateur.
-1. Dans la page **Charger des données**, sélectionnez le schéma **retail_db** et définissez le nom de la table sur **produits**. Sélectionnez ensuite **Créer une table** dans le coin inférieur gauche de la page.
+1. Dans le portail de l’espace de travail Azure Databricks, dans la barre latérale, sélectionnez **(+) Nouveau**, puis sélectionnez **Données**.
+1. Dans la page **Ajouter des données**, sélectionnez **Créer ou modifier une table** et chargez le fichier **products.csv** que vous avez téléchargé sur votre ordinateur.
+1. Dans la page **Créer ou modifier une table depuis le chargement de fichiers**, sélectionnez le schéma **retail_db** et définissez le nom de la table sur **produits**. Sélectionnez ensuite **Créer une table** dans le coin inférieur droit de la page.
 1. Une fois la table créée, vérifiez ses détails.
 
 La possibilité de créer une table en important des données à partir d’un fichier facilite le remplissage d’une base de données. Vous pouvez également utiliser Spark SQL pour créer des tables à l’aide de code. Les tables elles-mêmes sont des définitions de métadonnées dans le metastore Hive, et les données qu’elles contiennent sont stockées au format Delta dans le stockage DBFS (Databricks File System).
 
-## Créer une requête
+## Création d’un tableau de bord
 
-1. Dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Requête**.
-2. Dans le volet **Navigateur de schéma**, développez **hive_metastore** et **retail_db**, puis vérifiez que la table des **produits** est répertoriée.
-3. Dans le volet **Nouvelle requête**, entrez le code SQL suivant :
+1. Dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Tableau de bord**.
+2. Sélectionnez le nom du nouveau tableau de bord et remplacez-le par **Tableau de bord de vente au détail**.
+3. Sous l’onglet **Données**, sélectionnez **Créer à partir de SQL** et utilisez la requête suivante :
 
     ```sql
    SELECT ProductID, ProductName, Category
    FROM retail_db.products; 
     ```
 
-4. Sélectionnez le bouton **►Exécuter** pour exécuter le code SQL.
-5. Une fois la requête terminée, consultez la table des résultats.
-6. Sélectionnez le bouton **Enregistrer** en haut à droite de l’éditeur de requête pour enregistrer la requête en tant que **Produits et catégories**.
+4. Sélectionnez **Exécuter**, puis remplacez Jeu de données sans titre par **Produits et catégories**.
+5. Sélectionnez l’onglet **Canevas**, puis sélectionnez **Ajouter une visualisation**.
+6. Dans l’éditeur de visualisation, définissez les propriétés suivantes :
+    
+    - **Jeu de données** : Produits et catégories
+    - **Visualisation** : barre
+    - **Axe des X** : NOMBRE(ID de produit)
+    - **Axe des Y** : catégorie
 
-L’enregistrement d’une requête facilite la récupération des mêmes données ultérieurement.
-
-## Création d’un tableau de bord
-
-1. Dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Tableau de bord**.
-2. Dans la boîte de dialogue **Nouveau tableau de bord**, entrez le nom **Tableau de bord de vente au détail**, puis sélectionnez **Enregistrer**.
-3. Dans le tableau de bord **Tableau de bord de vente au détail**, dans la liste déroulante **Ajouter**, sélectionnez **Visualisation**.
-4. Dans la boîte de dialogue **Ajouter un widget de visualisation**, sélectionnez la requête **Produits et catégories**. Sélectionnez ensuite **Créer une visualisation**, définissez le titre sur **Produits par catégorie**, puis sélectionnez **Créer une visualisation**.
-5. Dans l’éditeur de visualisation, définissez les propriétés suivantes :
-    - **Type de visualisation** : barre
-    - **Graphique horizontal** : sélectionné
-    - **Colonne Y** : catégorie
-    - **Colonnes X** : ID produit : nombre
-    - **Regrouper par** : *laissez le champ vide*
-    - **Empilement** : désactivé
-    - **Normaliser les valeurs en pourcentage** : <u>Non</u> sélectionné
-    - **Valeurs NULL et manquantes** : ne pas afficher dans le graphique
-
-6. Enregistrez la visualisation et affichez-la dans le tableau de bord.
-7. Sélectionnez **Fin de l’édition** pour afficher le tableau de bord tel que les utilisateurs le verront.
+7. Sélectionnez **Publier** pour afficher le tableau de bord tel que les utilisateurs le verront.
 
 Les tableaux de bord constituent un excellent moyen de partager des tables de données et des visualisations avec des utilisateurs professionnels. Vous pouvez planifier l’actualisation périodique des tableaux de bord et leur envoi par e-mail aux abonnés.
 
