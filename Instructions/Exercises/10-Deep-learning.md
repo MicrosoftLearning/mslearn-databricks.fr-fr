@@ -17,7 +17,7 @@ Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dan
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
 
-Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota ou d’autorisations insuffisants, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota insuffisant ou d’autorisations insuffisantes, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
 2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
@@ -405,91 +405,6 @@ Maintenant que nous avons un modèle entraîné, nous pouvons enregistrer ses po
    
    print('Prediction:',predicted.item())
     ```
-
-## Distribuer un entraînement avec Horovod
-
-L’entraînement du modèle précédent a été effectué sur un nœud unique du cluster. Dans la pratique, il est généralement préférable de mettre à l’échelle l’apprentissage du modèle de Deep Learning sur plusieurs processeurs (ou de préférence des GPU) sur un seul ordinateur, mais dans certains cas, dans certains cas où vous devez transmettre de grands volumes de données d’apprentissage via plusieurs couches d’un modèle de Deep Learning, vous pouvez obtenir une certaine efficacité en distribuant le travail d’entraînement sur plusieurs nœuds de cluster.
-
-Horovod est une bibliothèque open source que vous pouvez utiliser pour distribuer l’entraînement de Deep Learning sur plusieurs nœuds d’un cluster Spark, tels que ceux provisionnés dans un espace de travail Azure Databricks.
-
-### Créer une fonction d’entraînement
-
-Pour utiliser Horovod, vous encapsulez le code pour configurer les paramètres d’entraînement et appeler votre fonction **entraîner** dans une nouvelle fonction, que vous allez exécuter à l’aide de la classe **HorovodRunner** pour distribuer l’exécution sur plusieurs nœuds. Dans votre fonction wrapper d’entraînement, vous pouvez utiliser différentes classes Horovod pour définir un chargeur de données distribué afin que chaque nœud puisse travailler sur un sous-ensemble du jeu de données global, diffuser l’état initial des pondérations de modèle et de l’optimiseur sur tous les nœuds, identifier le nombre de nœuds utilisés et déterminer le code de nœud en cours d’exécution.
-
-1. Exécutez le code suivant pour créer une fonction qui entraîne un modèle à l’aide d’Horovod :
-
-    ```python
-   import horovod.torch as hvd
-   from sparkdl import HorovodRunner
-   
-   def train_hvd(model):
-       from torch.utils.data.distributed import DistributedSampler
-       
-       hvd.init()
-       
-       device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-       if device.type == 'cuda':
-           # Pin GPU to local rank
-           torch.cuda.set_device(hvd.local_rank())
-       
-       # Configure the sampler so that each worker gets a distinct sample of the input dataset
-       train_sampler = DistributedSampler(train_ds, num_replicas=hvd.size(), rank=hvd.rank())
-       # Use train_sampler to load a different sample of data on each worker
-       train_loader = torch.utils.data.DataLoader(train_ds, batch_size=20, sampler=train_sampler)
-       
-       # The effective batch size in synchronous distributed training is scaled by the number of workers
-       # Increase learning_rate to compensate for the increased batch size
-       learning_rate = 0.001 * hvd.size()
-       optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-       
-       # Wrap the local optimizer with hvd.DistributedOptimizer so that Horovod handles the distributed optimization
-       optimizer = hvd.DistributedOptimizer(optimizer, named_parameters=model.named_parameters())
-   
-       # Broadcast initial parameters so all workers start with the same parameters
-       hvd.broadcast_parameters(model.state_dict(), root_rank=0)
-       hvd.broadcast_optimizer_state(optimizer, root_rank=0)
-   
-       optimizer.zero_grad()
-   
-       # Train over 50 epochs
-       epochs = 100
-       for epoch in range(1, epochs + 1):
-           print('Epoch: {}'.format(epoch))
-           # Feed training data into the model to optimize the weights
-           train_loss = train(model, train_loader, optimizer)
-   
-       # Save the model weights
-       if hvd.rank() == 0:
-           model_file = '/dbfs/penguin_classifier_hvd.pt'
-           torch.save(model.state_dict(), model_file)
-           print('model saved as', model_file)
-    ```
-
-1. Utilisez le code suivant pour appeler votre fonction à partir d’un objet **HorovodRunner** :
-
-    ```python
-   # Reset random seed for PyTorch
-   torch.manual_seed(0)
-   
-   # Create a new model
-   new_model = PenguinNet()
-   
-   # We'll use CrossEntropyLoss to optimize a multiclass classifier
-   loss_criteria = nn.CrossEntropyLoss()
-   
-   # Run the distributed training function on 2 nodes
-   hr = HorovodRunner(np=2, driver_log_verbosity='all') 
-   hr.run(train_hvd, model=new_model)
-   
-   # Load the trained weights and test the model
-   test_model = PenguinNet()
-   test_model.load_state_dict(torch.load('/dbfs/penguin_classifier_hvd.pt'))
-   test_loss = test(test_model, test_loader)
-    ```
-
-Il se peut que vous deviez faire défiler l’écran pour voir toute la sortie, qui devrait afficher quelques messages d’information d’Horovod suivis de la sortie enregistrée des nœuds (parce que le paramètre **driver_log_verbosity** est défini sur **tout**). Les sorties de nœud doivent afficher la perte après chaque époque. Enfin, la fonction **tester** est utilisée pour tester le modèle entraîné.
-
-> **Conseil** : Si la perte ne diminue pas après chaque époque, réessayez d’exécuter la cellule !
 
 ## Nettoyage
 
