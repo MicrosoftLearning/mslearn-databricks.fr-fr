@@ -22,7 +22,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -62,7 +62,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
@@ -74,8 +74,8 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 Comme dans de nombreux environnements Spark, Databricks prend en charge l’utilisation de notebooks pour combiner des notes et des cellules de code interactives que vous pouvez utiliser pour explorer les données.
 
 1. Téléchargez le fichier [**products.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv) à partir de `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv` vers votre ordinateur local, en l’enregistrant en tant que **products.csv**.
-1. Dans la barre latérale, dans le menu du lien **(+) Nouveau**, sélectionnez **Téléchargement du fichier**.
-1. Téléchargez le fichier **products.csv** téléchargé sur votre ordinateur.
+1. Dans la barre latérale, dans le menu du lien **(+) Nouveau**, sélectionnez **Données**.
+1. Sélectionnez **Créer ou modifier une table** et chargez le fichier **products.csv** que vous avez téléchargé sur votre ordinateur.
 1. Dans la page **Créer ou modifier une table à partir du chargement de fichier**, veillez à sélectionner votre cluster en haut de la page. Choisissez ensuite le catalogue **hive_metastore** et son schéma par défaut pour créer une table nommée **produits**.
 1. Dans la page **Explorateur de catalogue** une fois la page **produits** créée, dans le menu du bouton **Créer**, sélectionnez **Notebook** pour créer un notebook.
 1. Dans le notebook, vérifiez que le notebook est connecté à votre cluster, puis passez en revue le code automatiquement ajouté dans la première cellule et qui doit ressembler à ce qui suit :

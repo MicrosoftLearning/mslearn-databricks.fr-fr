@@ -21,7 +21,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -65,7 +65,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
@@ -76,7 +76,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
 
-2. Remplacez le nom du notebook par défaut (**Notebook sans titre *[date]***) par **Créer un pipeline de données avec Delta Live Tables** et, dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+2. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par `Create a pipeline with Delta Live tables`, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 3. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes du *shell* pour télécharger des fichiers de données depuis GitHub dans le système de fichiers utilisé par votre cluster.
 
@@ -91,7 +91,9 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 ## Créer un pipeline Delta Live Tables à l’aide de SQL
 
-Créez un notebook SQL et commencez à définir les tables Delta Live Table à l’aide de scripts SQL. Assurez-vous que vous avez activé l’interface utilisateur SQL DLT.
+Créez un notebook et commencez à définir les tables Delta Live Table à l’aide de scripts SQL.
+
+1. En regard du nom du notebook, sélectionnez **Python** et remplacez le langage par défaut par **SQL**.
 
 1. Placez le code suivant dans la première cellule sans l’exécuter. Toutes les cellules seront exécutées une fois le pipeline créé. Ce code définit une table Delta Live Table qui sera remplie par les données brutes précédemment téléchargées :
 
@@ -117,7 +119,7 @@ Créez un notebook SQL et commencez à définir les tables Delta Live Table à l
     COMMENT "Formatted and filtered data for analysis."
     AS
     SELECT
-        DATE_FORMAT(Last_Update, 'MM/dd/yyyy') as Report_Date,
+        TO_DATE(Last_Update, 'MM/dd/yyyy') as Report_Date,
         Country_Region,
         Confirmed,
         Deaths,
@@ -154,8 +156,8 @@ Créez un notebook SQL et commencez à définir les tables Delta Live Table à l
  
 7. Une fois que l’exécution du pipeline a réussi, revenez au premier notebook et vérifiez que les 3 nouvelles tables ont toutes été créées à l’emplacement de stockage spécifié avec le code suivant :
 
-     ```sql
-    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab"))
+     ```python
+    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/tables"))
      ```
 
 ## Visualiser les résultats
