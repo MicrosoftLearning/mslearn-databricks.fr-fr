@@ -11,7 +11,7 @@ Azure Databricks facilite l’analyse exploratoire des données (EDA), ce qui p
 
 Il intègre divers outils et techniques pour l’EDA, y compris des méthodes statistiques et des visualisations, afin de résumer les caractéristiques des données et identifier les problèmes sous-jacents.
 
-Cet exercice devrait prendre environ **45** minutes.
+Cet exercice devrait prendre environ **30** minutes.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -26,7 +26,7 @@ Si le script échoue en raison d’un quota insuffisant ou d’autorisations ins
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -68,7 +68,7 @@ Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire 
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
@@ -79,7 +79,7 @@ Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire 
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
    
-1. Remplacez le nom du notebook par défaut (**Notebook sans titre *[date]***) par **Explorer les données avec Spark** et, dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+1. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par `Explore data with Spark`, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 ## Ingérer des données
 
