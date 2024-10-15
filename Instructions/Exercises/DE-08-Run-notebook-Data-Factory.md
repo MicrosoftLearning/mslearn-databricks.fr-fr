@@ -20,7 +20,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -65,7 +65,7 @@ Vous pouvez créer des notebooks dans votre espace de travail Azure Databricks 
 
 1. Affichez le portail de l’espace de travail Azure Databricks et notez que la barre latérale gauche contient des icônes indiquant les différentes tâches que vous pouvez effectuer.
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
-1. Modifier le nom du notebook par défaut (**Notebook sans titre *[date]***) en **Traiter les données**.
+1. Modifiez le nom du notebook par défaut (**Notebook sans titre *[date]***) en `Process Data`.
 1. Dans la première cellule du notebook, saisissez (mais n’exécutez pas) le code suivant pour définir une variable pour le dossier dans lequel ce notebook enregistrera des données.
 
     ```python
@@ -113,9 +113,9 @@ Pour utiliser Azure Databricks à partir d’un pipeline Azure Data Factory, v
 4. Dans la page **Gérer**, sous l’onglet **Services liés**, sélectionnez **+ Nouveau** pour ajouter un nouveau service lié.
 5. Dans le volet **Nouveau service lié**, sélectionnez l’onglet **Calcul** dans la partie supérieure. Sélectionnez ensuite **Azure Databricks**.
 6. Créez ensuite le service lié avec les paramètres suivants :
-    - **Nom** : AzureDatabricks
-    - **Description** : espace de travail Azure Databricks
-    - **Se connecter via un runtime d’intégration** : AutoResolveIntegrationRuntime
+    - **Nom :** `AzureDatabricks`
+    - **Description** : `Azure Databricks workspace`
+    - **Se connecter via un runtime d'intégration** : AutoResolveIntegrationRuntime
     - **Méthode de sélection du compte** : à partir d’un abonnement Azure
     - **Abonnement Azure** : *sélectionnez votre abonnement*
     - **Espace de travail Databricks** : *sélectionnez votre espace de travail **databricksxxxxxxx***
@@ -137,11 +137,11 @@ Maintenant que vous avez créé un service lié, vous pouvez l’utiliser dans u
 
 1. Dans Azure Data Factory Studio, sélectionnez **Créer** dans le volet de navigation.
 2. Dans la page **Créer**, dans le volet **Ressources Factory**, utilisez l’icône **+** pour ajouter un **pipeline**.
-3. Dans le volet **Propriétés** du nouveau pipeline, remplacez son nom par **Traiter les données avec Databricks**. Utilisez ensuite le bouton **Propriétés** (qui ressemble à **<sub>*</sub>**) à droite de la barre d’outils pour masquer le volet **Propriétés**.
+3. Dans le volet **Propriétés** du nouveau pipeline, remplacez son nom par `Process Data with Databricks`. Utilisez ensuite le bouton **Propriétés** (qui ressemble à **<sub>*</sub>**) à droite de la barre d’outils pour masquer le volet **Propriétés**.
 4. Dans le volet **Activités**, développez **Databricks**, puis faites glisser une activité **Notebook** vers la surface du concepteur de pipeline.
 5. Une fois la nouvelle activité **Notebook1** sélectionnée, définissez les propriétés suivantes dans le volet du bas :
     - **Général :**
-        - **Nom** : traiter les données
+        - **Nom :** `Process Data`
     - **Azure Databricks** :
         - **Service lié Databricks** : *sélectionnez le service lié **AzureDatabricks** que vous avez créé précédemment*
     - **Paramètres**:

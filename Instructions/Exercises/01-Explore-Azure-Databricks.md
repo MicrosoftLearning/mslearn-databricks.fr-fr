@@ -1,6 +1,6 @@
 ---
 lab:
-  title: Explorer Azure Databricks
+  title: "Déconseillé - Explorer Azure\_Databricks"
 ---
 
 # Explorer Azure Databricks

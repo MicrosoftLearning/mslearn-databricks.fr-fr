@@ -67,7 +67,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
