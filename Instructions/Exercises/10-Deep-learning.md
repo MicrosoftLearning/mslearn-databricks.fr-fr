@@ -1,6 +1,6 @@
 ---
 lab:
-  title: Effectuer l’apprentissage d’un modèle d’apprentissage profond
+  title: Déconseillé - Effectuer l’apprentissage d’un modèle de Deep Learning
 ---
 
 # Effectuer l’apprentissage d’un modèle d’apprentissage profond

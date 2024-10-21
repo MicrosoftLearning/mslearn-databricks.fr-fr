@@ -21,7 +21,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -65,7 +65,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
@@ -97,7 +97,7 @@ Vous implémentez votre workflow de traitement et d’analyse des données à l�
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
 
-2. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par **Tâche ETL**, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+2. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par `ETL task`, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 3. Dans la première cellule du notebook, entrez le code suivant, qui définit un schéma pour les données et charge les jeux de données dans un dataframe :
 
@@ -127,7 +127,7 @@ Vous implémentez votre workflow de traitement et d’analyse des données à l�
     df = df.withColumn('Tax', col('UnitPrice') * 0.08)
     df = df.withColumn('Tax', col('Tax').cast("float"))
      ```
-> Remarque : après la mise à jour des valeurs de la colonne **Tax**, son type de données est à nouveau défini sur `float`. Cela est dû au fait que le type de données a été changé en `double` après l’exécution du calcul. Étant donné que `double` utilise plus de mémoire que `float`, il est préférable de reconvertir le type de la colonne en `float` pour de meilleures performances.
+    > **Remarque** : après la mise à jour des valeurs de la colonne **Taxe**, son type de données est à nouveau défini sur `float`. Cela est dû au fait que le type de données a été changé en `double` après l’exécution du calcul. Étant donné que `double` utilise plus de mémoire que `float`, il est préférable de reconvertir le type de la colonne en `float` pour de meilleures performances.
 
 5. Dans une nouvelle cellule de code, exécutez le code suivant pour agréger et regrouper les données relatives aux commandes :
 
@@ -156,7 +156,7 @@ Azure Databricks gère l’orchestration des tâches, la gestion des clusters, l
 
 2. Dans le volet Workflows, sélectionnez **Créer un travail**.
 
-3. Remplacez le nom du travail par défaut (**Nouveau travail *[date]***) par **Travail ETL**.
+3. Remplacez le nom du travail par défaut (**Nouveau travail *[date]***) par `ETL job`.
 
 4. Dans le champ **Nom de la tâche**, entrez un nom pour la tâche.
 

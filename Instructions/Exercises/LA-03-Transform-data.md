@@ -24,7 +24,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -64,7 +64,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
     - **Version du runtime Databricks** : 13.3 LTS (Spark 3.4.1, Scala 2.12) ou version ultérieure
     - **Utiliser l’accélération photon** : sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 6. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
@@ -75,7 +75,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**.
 
-2. Remplacez le nom du notebook par défaut (**Notebook sans titre *[date]***) par **Transformer les données avec Spark** et, dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+2. Remplacez le nom de notebook par défaut (**Notebook sans titre *[date]***) par `Transform data with Spark`, puis dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 ## Ingérer des données
 
@@ -178,7 +178,7 @@ Vous observerez qu’après la mise à jour des valeurs de la colonne **Tax**, s
    display(yearlySales)
     ```
 
-    Cette fois, les résultats indiquent le nombre de commandes par an. Notez que la méthode select inclut une fonction **année** SQL pour extraire le composant année du champ *OrderDate*, puis une méthode **alias**est utilisée pour affecter un nom de colonne à la valeur d’année extraite. Les données sont ensuite regroupées par la colonne *Year* dérivée et le **nombre** de lignes dans chaque groupe est calculé avant que la méthode **orderBy** soit finalement utilisée pour trier le dataframe résultant.
+    Cette fois, les résultats indiquent le nombre de commandes par an. Notez que la méthode select inclut une fonction **année** SQL pour extraire le composant année du champ *OrderDate*, puis une méthode **alias** est utilisée pour affecter un nom de colonne à la valeur d’année extraite. Les données sont ensuite regroupées par la colonne *Year* dérivée et le **nombre** de lignes dans chaque groupe est calculé avant que la méthode **orderBy** soit finalement utilisée pour trier le dataframe résultant.
 
 > **Remarque** : Pour en savoir plus sur l’utilisation des Dataframes dans Azure Databricks, consultez [Introduction aux DataFrames : Python](https://docs.microsoft.com/azure/databricks/spark/latest/dataframes-datasets/introduction-to-dataframes-python) dans la documentation Azure Databricks.
 
@@ -186,7 +186,15 @@ Vous observerez qu’après la mise à jour des valeurs de la colonne **Tax**, s
 
 1. Bien qu’il soit utile d’incorporer des instructions SQL dans une cellule contenant du code PySpark, les analystes de données veulent souvent simplement travailler directement dans SQL. Ajoutez une nouvelle cellule de code et utilisez-la pour exécuter le code suivant.
 
-    ```sql
+    ```python
+   df.createOrReplaceTempView("salesorders")
+    ```
+
+Cette ligne de code crée une vue temporaire qui peut ensuite être utilisée directement avec des instructions SQL.
+
+2. Exécutez le code suivant dans une nouvelle cellule :
+   
+    ```python
    %sql
     
    SELECT YEAR(OrderDate) AS OrderYear,
@@ -198,7 +206,7 @@ Vous observerez qu’après la mise à jour des valeurs de la colonne **Tax**, s
 
     Observez que :
     
-    - La ligne ``%sql` au début de la cellule (appelée commande magique) indique que le runtime de langage Spark SQL doit être utilisé à la place de PySpark pour exécuter le code dans cette cellule.
+    - La ligne **%sql** au début de la cellule (appelée commande magique) indique que le runtime de langage Spark SQL doit être utilisé à la place de PySpark pour exécuter le code dans cette cellule.
     - Le code SQL fait référence à la vue **salesorder** que vous avez créée précédemment.
     - La sortie de la requête SQL s’affiche automatiquement en tant que résultat sous la cellule.
     
