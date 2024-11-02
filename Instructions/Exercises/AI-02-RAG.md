@@ -69,7 +69,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
         - *Inclut Scala > **2.11***
         - *Inclut Spark > **3.4***
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
-    - **Type de nœud** : Standard_DS3_v2
+    - **Type de nœud** : Standard_D4ds_v5
     - **Arrêter après** *20* **minutes d’inactivité**
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.

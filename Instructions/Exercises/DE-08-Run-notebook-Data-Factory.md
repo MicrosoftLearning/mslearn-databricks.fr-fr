@@ -124,7 +124,7 @@ Pour utiliser Azure Databricks à partir d’un pipeline Azure Data Factory, v
     - **Type d’authentification** : jeton d’accès
     - **Jeton d’accès** : *collez votre jeton d’accès*
     - **Version du cluster** : 13.3 LTS (Spark 3.4.1, Scala 2.12)
-    - **Type de nœud de cluster** : Standard_DS3_v2
+    - **Type de nœud de cluster** : Standard_D4ds_v5
     - **Version de Python** : 3
     - **Options de Worker** : fixe
     - **Workers** : 1
