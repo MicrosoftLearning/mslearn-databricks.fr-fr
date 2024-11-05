@@ -108,10 +108,10 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 3. Donnez un nom à votre notebook et sélectionnez le langage `Python`.
 
-4. Dans la première cellule de code, entrez et exécutez le code suivant pour installer les bibliothèques nécessaires :
+4. Dans la première cellule de code, entrez et exécutez le code suivant pour installer la bibliothèque OpenAI :
    
      ```python
-    %pip install azure-ai-openai flask
+    %pip install openai
      ```
 
 5. Une fois l’installation terminée, redémarrez le noyau dans une nouvelle cellule :
@@ -122,80 +122,66 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 ## Journaliser le LLM à l’aide de MLflow
 
+Les fonctionnalités de suivi LLM de MLflow vous permettent de journaliser les paramètres, les métriques, les prédictions et les artefacts. Les paramètres incluent des paires clé-valeur détaillant les configurations d’entrée, tandis que les métriques fournissent des mesures quantitatives des performances. Les prédictions englobent les invites d’entrée et les réponses du modèle, stockées en tant qu’artefacts pour faciliter leur récupération. Cette journalisation structurée permet de conserver un enregistrement détaillé de chaque interaction, ce qui facilite l’analyse et l’optimisation des LLM.
+
+1. Dans une nouvelle cellule, exécutez le code suivant avec les informations d’accès que vous avez copiées au début de cet exercice afin d’affecter des variables d’environnement persistantes pour l’authentification lors de l’utilisation de ressources Azure OpenAI :
+
+     ```python
+    import os
+
+    os.environ["AZURE_OPENAI_API_KEY"] = "your_openai_api_key"
+    os.environ["AZURE_OPENAI_ENDPOINT"] = "your_openai_endpoint"
+    os.environ["AZURE_OPENAI_API_VERSION"] = "2023-03-15-preview"
+     ```
 1. Dans une nouvelle cellule, exécutez le code suivant pour initialiser votre client Azure OpenAI :
 
      ```python
-    from azure.ai.openai import OpenAIClient
+    import os
+    from openai import AzureOpenAI
 
-    client = OpenAIClient(api_key="<Your_API_Key>")
-    model = client.get_model("gpt-3.5-turbo")
+    client = AzureOpenAI(
+       azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"),
+       api_key = os.getenv("AZURE_OPENAI_API_KEY"),
+       api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+    )
      ```
 
-1. Dans une nouvelle cellule, exécutez le code suivant pour initialiser le suivi MLflow :     
+1. Dans une nouvelle cellule, exécutez le code suivant pour initialiser le suivi MLflow et journaliser le modèle :     
 
      ```python
     import mlflow
+    from openai import AzureOpenAI
 
-    mlflow.set_tracking_uri("databricks")
-    mlflow.start_run()
-     ```
+    system_prompt = "Assistant is a large language model trained by OpenAI."
 
-1. Dans une nouvelle cellule, exécutez le code suivant pour journaliser le modèle :
+    mlflow.openai.autolog()
 
-     ```python
-    mlflow.pyfunc.log_model("model", python_model=model)
+    with mlflow.start_run():
+
+        response = client.chat.completions.create(
+            model="gpt-35-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": "Tell me a joke about animals."},
+            ],
+        )
+
+        print(response.choices[0].message.content)
+        mlflow.log_param("completion_tokens", response.usage.completion_tokens)
     mlflow.end_run()
      ```
 
-## Déployer le modèle
-
-1. Créez un notebook et, dans sa première cellule, exécutez le code suivant pour créer une API REST pour le modèle :
-
-     ```python
-    from flask import Flask, request, jsonify
-    import mlflow.pyfunc
-
-    app = Flask(__name__)
-
-    @app.route('/predict', methods=['POST'])
-    def predict():
-        data = request.json
-        model = mlflow.pyfunc.load_model("model")
-        prediction = model.predict(data["input"])
-        return jsonify(prediction)
-
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000)
-     ```
+La cellule ci-dessus démarre une expérience dans votre espace de travail et conserve les traces de chaque itération d’achèvement de conversation, permettant ainsi le suivi des entrées, des sorties et des métadonnées de chaque exécution.
 
 ## Analyser le modèle
 
-1. Dans votre premier notebook, créez une cellule et exécutez le code suivant pour activer la journalisation automatique MLflow :
+1. Dans la barre latérale de gauche, sélectionnez **Expériences** puis sélectionnez l’expérience associée au notebook que vous avez utilisé pour cet exercice. Sélectionnez la dernière exécution et vérifiez dans la page Vue d’ensemble qu’il existe un paramètre journalisé : `completion_tokens`. Par défaut, la commande `mlflow.openai.autolog()` journalise les traces de chaque exécution, mais vous pouvez également journaliser des paramètres supplémentaires avec `mlflow.log_param()`, afin d’analyser le modèle ultérieurement.
 
-     ```python
-    mlflow.autolog()
-     ```
+1. Sélectionnez l’onglet **Traces**, puis sélectionnez la dernière trace créée. Vérifiez que le paramètre `completion_tokens` fait partie de la sortie de la trace :
 
-1. Dans une nouvelle cellule, exécutez le code suivant pour suivre les prédictions et les données d’entrée.
+   ![Interface utilisateur de trace MLFlow](./images/trace-ui.png)  
 
-     ```python
-    mlflow.log_param("input", data["input"])
-    mlflow.log_metric("prediction", prediction)
-     ```
-
-1. Dans une nouvelle cellule, exécutez le code suivant pour surveiller la dérive des données :
-
-     ```python
-    import pandas as pd
-    from evidently.dashboard import Dashboard
-    from evidently.tabs import DataDriftTab
-
-    report = Dashboard(tabs=[DataDriftTab()])
-    report.calculate(reference_data=historical_data, current_data=current_data)
-    report.show()
-     ```
-
-Une fois que vous avez commencé à surveiller le modèle, vous pouvez configurer des pipelines de réentraînement automatisés si des dérives de données sont détectées.
+Lors de votre analyse du modèle, vous pouvez comparer les traces de différentes exécutions pour détecter une possible dérive des données. Recherchez des modifications significatives dans les distributions de données d’entrée, les prédictions de modèle ou les métriques de performances au fil du temps. Vous pouvez utiliser des tests statistiques ou des outils de visualisation pour faciliter cette analyse.
 
 ## Nettoyage
 
