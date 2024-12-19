@@ -9,6 +9,8 @@ L’évaluation d’un grand modèle de langage (LLM) nécessite une série d’
 
 Ce labo prend environ **20** minutes.
 
+> **Remarque** : l’interface utilisateur d’Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
+
 ## Avant de commencer
 
 Vous avez besoin d’un [abonnement Azure](https://azure.microsoft.com/free) dans lequel vous avez un accès administratif.

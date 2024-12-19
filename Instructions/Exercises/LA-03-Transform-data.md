@@ -5,13 +5,13 @@ lab:
 
 # Transformer des données avec Apache Spark dans Azure Databricks
 
-Azure Databricks est une version basée sur Microsoft Azure de la plateforme Databricks open source reconnue. 
-
-Azure Databricks repose sur Apache Spark et offre une solution hautement évolutive pour les tâches d’ingénierie et d’analyse des données qui impliquent l’utilisation de données dans des fichiers.
+Azure Databricks est une version basée sur Microsoft Azure de la plateforme Databricks open source reconnue. Azure Databricks repose sur Apache Spark et offre une solution hautement évolutive pour les tâches d’ingénierie et d’analyse des données qui impliquent l’utilisation de données dans des fichiers.
 
 Les tâches courantes de transformation de données dans Azure Databricks incluent le nettoyage des données, l’exécution d’agrégations et le cast de types. Ces transformations sont essentielles pour préparer des données à des fins d’analyse et font partie du processus ETL (Extract, Transform, Load) plus large.
 
 Cet exercice devrait prendre environ **30** minutes.
+
+> **Remarque** : l’interface utilisateur d’Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -20,13 +20,13 @@ Cet exercice devrait prendre environ **30** minutes.
 Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota insuffisant ou d’autorisations insuffisantes, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
-2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
+2. Cliquez sur le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, puis sélectionnez un environnement ***PowerShell***. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : Si vous avez déjà créé une instance de Cloud Shell qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour passer à ***PowerShell***.
+    > **Remarque** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
 
-3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Notez que vous pouvez redimensionner Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;**, **&#10530;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer ce dernier. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. Dans le volet PowerShell, entrez les commandes suivantes pour cloner ce référentiel :
 
@@ -56,7 +56,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
     > **Conseil** : lorsque vous utilisez le portail de l’espace de travail Databricks, plusieurs conseils et notifications peuvent s’afficher. Ignorez-les et suivez les instructions fournies pour effectuer les tâches de cet exercice.
 
-4. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**.
+4. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**. Vous devrez peut-être consulter le sous-menu **Plus**.
 5. Dans la page **Nouveau cluster**, créez un cluster avec les paramètres suivants :
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
@@ -91,7 +91,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
      ```
 
 2. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
-3. Ajoutez une nouvelle cellule de code et utilisez-la pour exécuter le code suivant, qui définit un schéma pour les données :
+3. Sous la sortie, utilisez l’icône **+ Code** pour ajouter une nouvelle cellule de code, et utilisez-la pour exécuter le code suivant, qui définit un schéma pour les données :
 
     ```python
    from pyspark.sql.types import *
@@ -115,15 +115,14 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 Notez que ce jeu de données comporte des lignes dupliquées et des valeurs `null` dans la colonne **Tax**. Par conséquent, une étape de nettoyage est requise avant le traitement et l’analyse des données.
 
-![Table avec des données à nettoyer.](./images/data-cleaning.png)
-
-1. Sous la cellule de code existante, sélectionnez l’icône **+** pour ajouter une nouvelle cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour supprimer les lignes dupliquées de la table et remplacer les entrées `null` par les valeurs correctes :
+1. Ajoutez une cellule de code. Ensuite, dans la nouvelle cellule, entrez et exécutez le code suivant pour supprimer les lignes dupliquées de la table et remplacer les entrées `null` par les valeurs correctes :
 
     ```python
     from pyspark.sql.functions import col
     df = df.dropDuplicates()
     df = df.withColumn('Tax', col('UnitPrice') * 0.08)
     df = df.withColumn('Tax', col('Tax').cast("float"))
+    display(df.limit(100))
     ```
 
 Vous observerez qu’après la mise à jour des valeurs de la colonne **Tax**, son type de données est à nouveau défini sur `float`. Cela est dû au fait que le type de données a été changé en `double` après l’exécution du calcul. Étant donné que `double` utilise plus de mémoire que `float`, il est préférable de reconvertir le type de la colonne en `float` pour de meilleures performances.
