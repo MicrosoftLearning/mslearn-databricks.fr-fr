@@ -9,6 +9,8 @@ L’optimisation des pipelines de données dans Azure Databricks peut améliore
 
 Ce labo prend environ **30** minutes.
 
+> **Note** : l’interface utilisateur Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
+
 ## Provisionner un espace de travail Azure Databricks
 
 > **Conseil** : Si vous disposez déjà d’un espace de travail Azure Databricks, vous pouvez ignorer cette procédure et utiliser votre espace de travail existant.
@@ -16,14 +18,13 @@ Ce labo prend environ **30** minutes.
 Cet exercice inclut un script permettant d’approvisionner un nouvel espace de travail Azure Databricks. Le script tente de créer une ressource d’espace de travail Azure Databricks de niveau *Premium* dans une région dans laquelle votre abonnement Azure dispose d’un quota suffisant pour les cœurs de calcul requis dans cet exercice ; et suppose que votre compte d’utilisateur dispose des autorisations suffisantes dans l’abonnement pour créer une ressource d’espace de travail Azure Databricks. Si le script échoue en raison d’un quota insuffisant ou d’autorisations insuffisantes, vous pouvez essayer de [créer un espace de travail Azure Databricks de manière interactive dans le portail Azure](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. Dans un navigateur web, connectez-vous au [portail Azure](https://portal.azure.com) à l’adresse `https://portal.azure.com`.
-
-2. Utilisez le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, en sélectionnant un environnement ***PowerShell*** et en créant le stockage si vous y êtes invité. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
+2. Cliquez sur le bouton **[\>_]** à droite de la barre de recherche, en haut de la page, pour créer un environnement Cloud Shell dans le portail Azure, puis sélectionnez un environnement ***PowerShell***. Cloud Shell fournit une interface de ligne de commande dans un volet situé en bas du portail Azure, comme illustré ici :
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez créé un shell cloud qui utilise un environnement *Bash*, utilisez le menu déroulant en haut à gauche du volet Cloud Shell pour le remplacer par ***PowerShell***.
+    > **Note** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
 
-3. Notez que vous pouvez redimensionner le volet Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;** , **&#9723;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer le volet. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Notez que vous pouvez redimensionner Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;**, **&#10530;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer ce dernier. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. Dans le volet PowerShell, entrez les commandes suivantes pour cloner ce référentiel :
 
@@ -56,7 +57,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
     > **Conseil** : lorsque vous utilisez le portail de l’espace de travail Databricks, plusieurs conseils et notifications peuvent s’afficher. Ignorez-les et suivez les instructions fournies pour effectuer les tâches de cet exercice.
 
-1. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**.
+1. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**. Vous devrez peut-être consulter le sous-menu **Plus**.
 
 1. Dans la page **Nouveau cluster**, créez un cluster avec les paramètres suivants :
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
@@ -74,7 +75,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 ## Créer un notebook et ingérer des données
 
-1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**. Dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+1. Dans la barre latérale, utilisez le lien **(+) Nouveau** pour créer un **notebook** et modifier le nom du notebook par défaut (**Notebook sans titre *[date]***) en **Optimiser l’ingestion des données**. Dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 2. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes du *shell* pour télécharger des fichiers de données depuis GitHub dans le système de fichiers utilisé par votre cluster.
 
@@ -85,7 +86,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     wget -O /dbfs/nyc_taxi_trips/yellow_tripdata_2021-01.parquet https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/yellow_tripdata_2021-01.parquet
      ```
 
-3. Dans une nouvelle cellule, exécutez le code suivant pour charger le jeu de données dans un dataframe.
+3. Sous la sortie de la première cellule, utilisez l’icône **+ Code** pour ajouter une nouvelle cellule et exécutez le code suivant dans celle-ci pour charger le jeu de données dans un DataFrame :
    
      ```python
     # Load the dataset into a DataFrame
@@ -125,17 +126,13 @@ Auto Loader fournit une source de flux structuré appelée `cloudFiles`. À part
     wget -O /dbfs/nyc_taxi_trips/yellow_tripdata_2021-02_edited.parquet https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/yellow_tripdata_2021-02_edited.parquet
      ```
    
-Le nouveau fichier a une nouvelle colonne. Le flux s’arrête donc avec une erreur `UnknownFieldException`. Avant que votre stream ne génère cette erreur, Auto Loader effectue l’inférence de schéma sur le dernier micro-batch de données et met à jour l’emplacement du schéma avec le schéma le plus récent en fusionnant les nouvelles colonnes à la fin du schéma. Les types de données des colonnes existantes restent inchangés.
+    Le nouveau fichier a une nouvelle colonne. Le flux s’arrête donc avec une erreur `UnknownFieldException`. Avant que votre stream ne génère cette erreur, Auto Loader effectue l’inférence de schéma sur le dernier micro-batch de données et met à jour l’emplacement du schéma avec le schéma le plus récent en fusionnant les nouvelles colonnes à la fin du schéma. Les types de données des colonnes existantes restent inchangés.
 
-3. Réexécutez la cellule de code de diffusion en continu et vérifiez que deux nouvelles colonnes ont été ajoutées au tableau :
-
-   ![Table Delta avec les nouvelles colonnes](./images/autoloader-new-columns.png)
-   
-> Remarque : la colonne `_rescued_data` contient toutes les données qui ne sont pas analysées en raison d’une incompatibilité de type, d’une incompatibilité de casse ou d’une colonne manquante dans le schéma.
+3. Réexécutez la cellule de code de diffusion en continu et vérifiez que deux nouvelles colonnes (**new_column** et *_rescued_data**) ont été ajoutées à la table : La colonne **_rescued_data** contient toutes les données qui ne sont pas analysées en raison d’une incompatibilité de type, d’une incompatibilité de casse ou d’une colonne manquante dans le schéma.
 
 4. Sélectionnez **Interrompre** pour arrêter la diffusion en continu des données.
    
-Les données de diffusion sont écrites dans les tables Delta. Delta Lake fournit un ensemble d’améliorations sur les fichiers Parquet traditionnels, comme les transactions ACID, l’évolution du schéma et le voyage dans le temps. Il unifie le traitement des données de diffusion et de traitement des données par lots, ce qui en fait une solution puissante pour la gestion des charges de travail des Big Data.
+    Les données de diffusion sont écrites dans les tables Delta. Delta Lake fournit un ensemble d’améliorations sur les fichiers Parquet traditionnels, comme les transactions ACID, l’évolution du schéma et le voyage dans le temps. Il unifie le traitement des données de diffusion et de traitement des données par lots, ce qui en fait une solution puissante pour la gestion des charges de travail des Big Data.
 
 ## Optimiser la transformation des données
 
