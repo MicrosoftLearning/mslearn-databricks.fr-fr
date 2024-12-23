@@ -9,7 +9,7 @@ Databricks Jobs est un service puissant qui permet l’automatisation des workf
 
 Ce labo prend environ **20** minutes.
 
-> **Remarque** : l’interface utilisateur d’Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
+> **Note** : l’interface utilisateur Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -22,7 +22,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Remarque** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
+    > **Note** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;**, **&#10530;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer ce dernier. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -41,7 +41,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 6. Si vous y êtes invité, choisissez l’abonnement à utiliser (uniquement si vous avez accès à plusieurs abonnements Azure).
 
-7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous attendez, consultez l’article [Présentation de Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) dans la documentation Azure Databricks.
+7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous patientez, consultez l’article [Planifier et orchestrer des workflows](https://learn.microsoft.com/azure/databricks/jobs/) dans la documentation d’Azure Databricks.
 
 ## Créer un cluster
 
@@ -57,7 +57,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
     > **Conseil** : lorsque vous utilisez le portail de l’espace de travail Databricks, plusieurs conseils et notifications peuvent s’afficher. Ignorez-les et suivez les instructions fournies pour effectuer les tâches de cet exercice.
 
-1. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**.
+1. Dans la barre latérale située à gauche, sélectionnez la tâche **(+) Nouveau**, puis sélectionnez **Cluster**. Vous devrez peut-être consulter le sous-menu **Plus**.
 
 1. Dans la page **Nouveau cluster**, créez un cluster avec les paramètres suivants :
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
@@ -73,9 +73,9 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
     > **Remarque** : si votre cluster ne démarre pas, le quota de votre abonnement est peut-être insuffisant dans la région où votre espace de travail Azure Databricks est approvisionné. Pour plus d’informations, consultez l’article [La limite de cœurs du processeur empêche la création du cluster](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si cela se produit, vous pouvez essayer de supprimer votre espace de travail et d’en créer un dans une autre région. Vous pouvez spécifier une région comme paramètre pour le script d’installation comme suit : `./mslearn-databricks/setup.ps1 eastus`
 
-## Créer un notebook et ingérer des données
+## Créer un notebook et obtenir des données sources
 
-1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**. Dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
+1. Dans la barre latérale, utilisez le lien **(+) Nouveau** pour créer un **notebook** et modifiez le nom du notebook par défaut (**Notebook sans titre *[date]***) en **Traitement de données**. Dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
 2. Dans la première cellule du notebook, entrez le code suivant, qui utilise des commandes du *shell* pour télécharger des fichiers de données depuis GitHub dans le système de fichiers utilisé par votre cluster.
 
@@ -90,17 +90,15 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 ## Automatiser le traitement de données avec les travaux Azure Databricks
 
-1. Créez un notebook et nommez-le *Traitement de données* pour faciliter son identification ultérieure. Il sera utilisée comme tâche pour automatiser le workflow d’ingestion et de traitement des données dans un travail Databricks.
-
-2. Dans la première cellule, exécutez le code suivant pour charger le jeu de données dans un dataframe :
+1. Remplacez le code au début du notebook par le code suivant. Ensuite, exécutez-le pour charger les données dans un dataframe :
 
      ```python
     # Load the sample dataset into a DataFrame
     df = spark.read.csv('/FileStore/*.csv', header=True, inferSchema=True)
     df.show()
      ```
-     
-3. Dans une nouvelle cellule, entrez le code suivant pour agréger les données de ventes par catégorie de produit :
+
+1. Déplacez la souris sous la cellule de code existante, puis utilisez l’icône **+ Code** qui apparaît pour ajouter une nouvelle cellule de code. Dans la nouvelle cellule, entrez et exécutez le code suivant pour agréger les données de ventes par catégorie de produit :
 
      ```python
     from pyspark.sql.functions import col, sum
@@ -110,21 +108,28 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     sales_by_category.show()
      ```
 
-4. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **travail**.
+1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **travail**.
 
-5. Indiquez un nom de tâche et spécifiez le notebook que vous avez créé comme source de la tâche dans le champ **Chemin d’accès**.
+1. Remplacez le nom du travail par défaut (**Nouveau travail *[date]***) par `Automated job`.
 
-6. Sélectionnez **Créer une tâche**.
+1. Configurez la tâche sans nom dans le travail avec les paramètres suivants :
+    - **Nom de la tâche** : `Run notebook`
+    - **Type** : notebook
+    - **Source** : espace de travail
+    - **Chemin d’accès** : *sélectionnez votre* *notebook* Traitement de données
+    - **Cluster** : *Sélectionner votre cluster*
 
-7. Dans le volet droit, sous **Planification**, vous pouvez sélectionner **Ajouter un déclencheur** et configurer une planification pour l’exécution du travail (par exemple, quotidienne, hebdomadaire). Toutefois, pour cet exercice, nous allons l’exécuter manuellement.
+1. Sélectionnez **Créer une tâche**.
 
-8. Sélectionnez **Exécuter maintenant**.
+1. Sélectionnez **Exécuter maintenant**.
 
-9. Sélectionnez l’onglet **Exécutions** dans le panneau Travail et surveillez l’exécution du travail.
+    **Conseil** : dans le volet droit, sous **Planification**, vous pouvez sélectionner **Ajouter un déclencheur** et configurer une planification pour l’exécution du travail (par exemple, quotidienne, hebdomadaire). Toutefois, pour cet exercice, nous allons l’exécuter manuellement.
 
-10. Une fois l’exécution réussie, vous pouvez sélectionner le travail et vérifier sa production.
+1. Sélectionnez l’onglet **Exécutions** dans le panneau Travail et surveillez l’exécution du travail.
 
-Vous avez correctement configuré et automatisé l’ingestion et le traitement des données à l’aide d’Azure Databricks Jobs. Vous pouvez désormais mettre à l’échelle cette solution pour gérer des pipelines de données plus complexes et les intégrer à d’autres services Azure pour une architecture robuste de traitement des données.
+1. Une fois l’exécution du travail réussie, vous pouvez le sélectionner dans la liste **Exécutions** et vérifier sa sortie.
+
+    Vous avez correctement configuré et automatisé l’ingestion et le traitement des données à l’aide d’Azure Databricks Jobs. Vous pouvez désormais mettre à l’échelle cette solution pour gérer des pipelines de données plus complexes et les intégrer à d’autres services Azure pour une architecture robuste de traitement des données.
 
 ## Nettoyage
 
