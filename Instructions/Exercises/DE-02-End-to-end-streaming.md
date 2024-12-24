@@ -41,7 +41,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 6. Si vous y êtes invité, choisissez l’abonnement à utiliser (uniquement si vous avez accès à plusieurs abonnements Azure).
 
-7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous attendez, consultez l’article [Présentation de Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) dans la documentation Azure Databricks.
+7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous attendez, consultez l’article [Streaming et ingestion incrémentale](https://learn.microsoft.com/azure/databricks/ingestion/streaming) dans la documentation d’Azure Databricks.
 
 ## Créer un cluster
 
