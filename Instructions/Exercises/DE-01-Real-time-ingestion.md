@@ -9,7 +9,7 @@ Spark Structured Streaming vous permet de traiter des données en temps réel 
 
 Ce labo prend environ **30** minutes.
 
-> **Note** : l’interface utilisateur Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
+> **Remarque** : l’interface utilisateur d’Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -22,7 +22,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
     ![Portail Azure avec un volet Cloud Shell](./images/cloud-shell.png)
 
-    > **Note** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
+    > **Remarque** : si vous avez déjà créé un Cloud Shell qui utilise un environnement *Bash*, basculez-le vers ***PowerShell***.
 
 3. Notez que vous pouvez redimensionner Cloud Shell en faisant glisser la barre de séparation en haut du volet. Vous pouvez aussi utiliser les icônes **&#8212;**, **&#10530;** et **X** situées en haut à droite du volet pour réduire, agrandir et fermer ce dernier. Pour plus d’informations sur l’utilisation d’Azure Cloud Shell, consultez la [documentation Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
