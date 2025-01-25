@@ -23,9 +23,12 @@ Cet exercice devrait prendre environ **20** minutes.
 2. Créez une ressource **Azure Databricks** avec les paramètres suivants :
     - **Abonnement** : *Sélectionnez votre abonnement Azure*.
     - **Groupe de ressources** : *créez un groupe de ressources nommé `msl-xxxxxxx` (où « xxxxxxx » est une valeur unique)*.
+    - **Nom de l’espace de travail** : `databricks-xxxxxxx`*(où « xxxxxxx » est la valeur utilisée dans le nom du groupe de ressources)*
     - **Région** : *sélectionnez une région disponible*.
-    - **Nom** : `databricks-xxxxxxx` *(où « xxxxxxx » est une valeur unique)*.
     - **Niveau tarifaire** : *Premium* ou *Évaluation*
+    - **Nom du groupe de ressources managées** : `databricks-xxxxxxx-managed`*(où « xxxxxxx » est la valeur utilisée dans le nom du groupe de ressources)*
+
+    ![Capture d’écran de la page Créer un espace de travail Azure Databricks dans le portail Azure.](./images/create-databricks.png)
 
 3. Sélectionnez **Examiner et créer**, puis attendez la fin du déploiement. Accédez ensuite à la ressource et lancez l’espace de travail.
 
