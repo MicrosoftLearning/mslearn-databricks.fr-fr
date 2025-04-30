@@ -5,7 +5,7 @@ lab:
 
 # Optimiser les hyperparamètres pour le Machine Learning dans Azure Databricks
 
-Dans cet exercice, vous allez utiliser la bibliothèque **Hyperopt** afin d’optimiser les hyperparamètres pour l’entraînement d’un modèle Machine Learning dans Azure Databricks.
+Dans cet exercice, vous allez utiliser la bibliothèque **Optuna** afin d’optimiser les hyperparamètres pour l’entraînement d’un modèle Machine Learning dans Azure Databricks.
 
 Cet exercice devrait prendre environ **30** minutes.
 
@@ -93,9 +93,9 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
 
     ```bash
     %sh
-    rm -r /dbfs/hyperopt_lab
-    mkdir /dbfs/hyperopt_lab
-    wget -O /dbfs/hyperopt_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
+    rm -r /dbfs/hyperparam_tune_lab
+    mkdir /dbfs/hyperparam_tune_lab
+    wget -O /dbfs/hyperparam_tune_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
 1. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
@@ -110,7 +110,7 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
    from pyspark.sql.types import *
    from pyspark.sql.functions import *
    
-   data = spark.read.format("csv").option("header", "true").load("/hyperopt_lab/penguins.csv")
+   data = spark.read.format("csv").option("header", "true").load("/hyperparam_tune_lab/penguins.csv")
    data = data.dropna().select(col("Island").astype("string"),
                              col("CulmenLength").astype("float"),
                              col("CulmenDepth").astype("float"),
@@ -130,103 +130,73 @@ Le scénario de cet exercice est basé sur des observations de manchots en Antar
 
 Vous entraînez un modèle Machine Learning en ajustant les fonctionnalités à un algorithme qui calcule l’étiquette la plus probable. Les algorithmes prennent les données d’apprentissage en tant que paramètre et tentent de calculer une relation mathématique entre les fonctionnalités et les étiquettes. En plus des données, la plupart des algorithmes utilisent un ou plusieurs *hyperparamètres* pour influencer la façon dont la relation est calculée. La détermination des valeurs optimales des hyperparamètres est une partie importante du processus itératif d'entraînement du modèle.
 
-Pour vous aider à déterminer des valeurs d’hyperparamètres optimales, Azure Databricks prend en charge **Hyperopt**, une bibliothèque qui vous permet d’essayer plusieurs valeurs d’hyperparamètres et de trouver la meilleure combinaison pour vos données.
+Pour vous aider à déterminer des valeurs d’hyperparamètres optimales, Azure Databricks prend en charge [**Optuna**](https://optuna.readthedocs.io/en/stable/index.html), une bibliothèque qui vous permet d’essayer plusieurs valeurs d’hyperparamètres et de trouver la meilleure combinaison pour vos données.
 
-La première étape de l’utilisation d’Hyperopt consiste à créer une fonction qui :
+La première étape de l’utilisation d’Optuna consiste à créer une fonction qui :
 
 - effectue l’apprentissage d’un modèle à l’aide d’une ou plusieurs valeurs d’hyperparamètres passées à la fonction en tant que paramètres ;
 - calcule une métrique de performance qui peut être utilisée pour mesurer la *perte* (à quel point le modèle s'éloigne de la performance de prédiction parfaite) ;
 - retourne la valeur de perte afin qu’elle puisse être optimisée (réduite) de manière itérative en essayant différentes valeurs d’hyperparamètres.
 
-1. Ajoutez une nouvelle cellule et utilisez le code suivant pour créer une fonction qui utilise les données sur les manchots pour entraîner un modèle de classification qui prédit l'espèce d'un manchot en fonction de son emplacement et de ses mesures :
+1. Ajoutez une nouvelle cellule et entrez le code suivant pour créer une fonction qui définit la plage de données à utiliser sur les hyperparamètres et les données des manchots permettant d’entraîner un modèle de classification qui prédit l'espèce d'un manchot en fonction de son emplacement et de ses mesures :
 
     ```python
-   from hyperopt import STATUS_OK
-   import mlflow
+   import optuna
+   import mlflow # if you wish to log your experiments
    from pyspark.ml import Pipeline
    from pyspark.ml.feature import StringIndexer, VectorAssembler, MinMaxScaler
    from pyspark.ml.classification import DecisionTreeClassifier
    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
    
-   def objective(params):
-       # Train a model using the provided hyperparameter value
-       catFeature = "Island"
-       numFeatures = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
-       catIndexer = StringIndexer(inputCol=catFeature, outputCol=catFeature + "Idx")
-       numVector = VectorAssembler(inputCols=numFeatures, outputCol="numericFeatures")
-       numScaler = MinMaxScaler(inputCol = numVector.getOutputCol(), outputCol="normalizedFeatures")
-       featureVector = VectorAssembler(inputCols=["IslandIdx", "normalizedFeatures"], outputCol="Features")
-       mlAlgo = DecisionTreeClassifier(labelCol="Species",    
-                                       featuresCol="Features",
-                                       maxDepth=params['MaxDepth'], maxBins=params['MaxBins'])
-       pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, mlAlgo])
+   def objective(trial):
+       # Suggest hyperparameter values (maxDepth and maxBins):
+       max_depth = trial.suggest_int("MaxDepth", 0, 9)
+       max_bins = trial.suggest_categorical("MaxBins", [10, 20, 30])
+
+       # Define pipeline components
+       cat_feature = "Island"
+       num_features = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
+       catIndexer = StringIndexer(inputCol=cat_feature, outputCol=cat_feature + "Idx")
+       numVector = VectorAssembler(inputCols=num_features, outputCol="numericFeatures")
+       numScaler = MinMaxScaler(inputCol=numVector.getOutputCol(), outputCol="normalizedFeatures")
+       featureVector = VectorAssembler(inputCols=[cat_feature + "Idx", "normalizedFeatures"], outputCol="Features")
+
+       dt = DecisionTreeClassifier(
+           labelCol="Species",
+           featuresCol="Features",
+           maxDepth=max_depth,
+           maxBins=max_bins
+       )
+
+       pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, dt])
        model = pipeline.fit(train)
-       
-       # Evaluate the model to get the target metric
-       prediction = model.transform(test)
-       eval = MulticlassClassificationEvaluator(labelCol="Species", predictionCol="prediction", metricName="accuracy")
-       accuracy = eval.evaluate(prediction)
-       
-       # Hyperopt tries to minimize the objective function, so you must return the negative accuracy.
-       return {'loss': -accuracy, 'status': STATUS_OK}
+
+       # Evaluate the model using accuracy.
+       predictions = model.transform(test)
+       evaluator = MulticlassClassificationEvaluator(
+           labelCol="Species",
+           predictionCol="prediction",
+           metricName="accuracy"
+       )
+       accuracy = evaluator.evaluate(predictions)
+
+       # Since Optuna minimizes the objective, return negative accuracy.
+       return -accuracy
     ```
 
-1. Ajoutez une nouvelle cellule et utilisez le code suivant pour :
-    - définir un espace de recherche qui spécifie la plage de valeurs à utiliser pour un ou plusieurs hyperparamètres (pour plus d’informations, consultez [Définition d’un espace de recherche](http://hyperopt.github.io/hyperopt/getting-started/search_spaces/) dans la documentation Hyperopt) ;
-    - spécifier l’algorithme Hyperopt que vous souhaitez utiliser (pour plus d’informations, consultez [Algorithmes](http://hyperopt.github.io/hyperopt/#algorithms) dans la documentation Hyperopt) ;
-    - utiliser la fonction **hyperopt.fmin** pour appeler votre fonction d’entraînement à plusieurs reprises et essayer de réduire la perte.
+1. Ajoutez une nouvelle cellule et entrez le code suivant pour exécuter l’expérience d’optimisation :
 
     ```python
-   from hyperopt import fmin, tpe, hp
-   
-   # Define a search space for two hyperparameters (maxDepth and maxBins)
-   search_space = {
-       'MaxDepth': hp.randint('MaxDepth', 10),
-       'MaxBins': hp.choice('MaxBins', [10, 20, 30])
-   }
-   
-   # Specify an algorithm for the hyperparameter optimization process
-   algo=tpe.suggest
-   
-   # Call the training function iteratively to find the optimal hyperparameter values
-   argmin = fmin(
-     fn=objective,
-     space=search_space,
-     algo=algo,
-     max_evals=6)
-   
-   print("Best param values: ", argmin)
+   # Optimization run with 5 trials:
+   study = optuna.create_study()
+   study.optimize(objective, n_trials=5)
+
+   print("Best param values from the optimization run:")
+   print(study.best_params)
     ```
 
-1. Observez comment le code exécute de manière itérative la fonction d'entraînement 6 fois (en fonction du paramètre **max_evals**). Chaque exécution est enregistrée par MLflow et vous pouvez utiliser le bouton de bascule **&#9656 ;** pour développer la sortie de l’exécution **MLflow** sous la cellule de code et sélectionner le lien hypertexte de l’**expérience** pour les afficher. Chaque exécution se voit attribuer un nom aléatoire, et vous pouvez les voir dans la visionneuse d'exécution MLflow pour consulter les détails des paramètres et des métriques qui ont été enregistrés.
-1. Une fois que toutes les exécutions sont terminées, observez que le code affiche les détails des meilleures valeurs d'hyperparamètres trouvées (la combinaison qui a entraîné la perte la plus faible). Dans ce cas, le paramètre **MaxBins** est défini comme un choix parmi une liste de trois valeurs possibles (10, 20 et 30). La meilleure valeur indique l’élément de base zéro dans la liste (donc 0=10, 1=20 et 2=30). Le paramètre **MaxDepth** est défini comme un entier aléatoire compris entre 0 et 10, et la valeur entière qui a donné le meilleur résultat est affichée. Pour plus d’informations sur la spécification d’étendues de valeurs hyperparamètres pour les espaces de recherche, consultez [expressions de paramètre](http://hyperopt.github.io/hyperopt/getting-started/search_spaces/#parameter-expressions) dans la documentation Hyperopt.
-
-## Utiliser la classe Trials pour journaliser les détails de l’exécution
-
-Outre l’utilisation des exécutions d’expériences MLflow pour journaliser les détails de chaque itération, vous pouvez également utiliser la classe **hyperopt.Trials** pour enregistrer et afficher les détails de chaque exécution.
-
-1. Ajoutez une nouvelle cellule et utilisez le code suivant pour afficher les détails de chaque exécution enregistrée par la classe **Trial** :
-
-    ```python
-   from hyperopt import Trials
-   
-   # Create a Trials object to track each run
-   trial_runs = Trials()
-   
-   argmin = fmin(
-     fn=objective,
-     space=search_space,
-     algo=algo,
-     max_evals=3,
-     trials=trial_runs)
-   
-   print("Best param values: ", argmin)
-   
-   # Get details from each trial run
-   print ("trials:")
-   for trial in trial_runs.trials:
-       print ("\n", trial)
-    ```
+1. Notez la façon dont le code exécute de manière itérative la fonction d'entraînement 5 fois tout en essayent de réduire les pertes (en fonction du paramètre **n_trials**). Chaque exécution est enregistrée par MLflow et vous pouvez utiliser le bouton (bascule) **&#9656;** pour développer la sortie de l’**exécution MLflow** sous la cellule de code et sélectionner le lien hypertexte de l’**expérience** pour les afficher. Chaque exécution se voit attribuer un nom aléatoire, et vous pouvez les voir dans la visionneuse d'exécution MLflow pour consulter les détails des paramètres et des métriques qui ont été enregistrés.
+1. Une fois que toutes les exécutions sont terminées, observez que le code affiche les détails des meilleures valeurs d'hyperparamètres trouvées (la combinaison qui a entraîné la perte la plus faible). Dans ce cas, le paramètre **MaxBins** est défini comme un choix parmi une liste de trois valeurs possibles (10, 20 et 30). La meilleure valeur indique l’élément de base zéro dans la liste (donc 0=10, 1=20 et 2=30). Le paramètre **MaxDepth** est défini comme un entier aléatoire compris entre 0 et 10, et la valeur entière qui a donné le meilleur résultat est affichée. 
 
 ## Nettoyage
 
