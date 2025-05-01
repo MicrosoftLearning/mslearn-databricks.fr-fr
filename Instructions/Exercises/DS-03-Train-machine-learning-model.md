@@ -395,7 +395,7 @@ Jusqu’à présent, vous avez entraîné un modèle de classification à l’ai
 
     Cette fois, le pipeline inclut les mêmes étapes de préparation des caractéristiques que précédemment, mais utilise un algorithme *d’arbre de décision* pour entraîner le modèle.
     
-   1. Exécutez le code suivant pour utiliser le nouveau pipeline avec les données de test :
+1. Exécutez le code suivant pour utiliser le nouveau pipeline avec les données de test :
 
     ```python
    # Get predictions

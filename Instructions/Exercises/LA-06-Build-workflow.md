@@ -41,7 +41,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 6. Si vous y êtes invité, choisissez l’abonnement à utiliser (uniquement si vous avez accès à plusieurs abonnements Azure).
 
-7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous attendez, consultez l’article [Planifier et orchestrer des workflows](https://learn.microsoft.com/azure/databricks/jobs/) dans la documentation d’Azure Databricks.
+7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous patientez, consultez l’article [Planifier et orchestrer des workflows](https://learn.microsoft.com/azure/databricks/jobs/) dans la documentation d’Azure Databricks.
 
 ## Créer un cluster
 
