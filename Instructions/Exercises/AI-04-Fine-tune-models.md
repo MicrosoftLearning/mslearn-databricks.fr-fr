@@ -142,7 +142,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     os.environ["TEMP_AUTH_TOKEN"] = "your_access_token"
      ```
      
-## Nombre de jetons validés
+## Valider le nombre de jetons
 
 `training_set.jsonl` et `validation_set.jsonl` sont constitués d’exemples de conversation différents entre `user` et `assistant`, qui serviront de points de données pour l’entraînement et la validation du modèle ajusté. Les exemples individuels doivent rester sous la limite des jetons d’entrée du modèle `gpt-35-turbo` de 4 096 jetons.
 

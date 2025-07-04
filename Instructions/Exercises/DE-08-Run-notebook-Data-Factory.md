@@ -107,6 +107,26 @@ Pour utiliser Azure Databricks à partir d’un pipeline Azure Data Factory, v
 1. Sélectionnez **Générer un nouveau jeton** et générez un nouveau jeton avec le commentaire *Data Factory* et une durée de vie vide (le jeton n’expire donc pas). Veillez à **copier le jeton lorsqu’il est affiché <u>avant</u> de sélectionner *Terminé***.
 1. Collez le jeton copié dans un fichier texte afin de pouvoir l’utiliser ultérieurement dans cet exercice.
 
+## Utiliser un pipeline pour exécuter le notebook Azure Databricks
+
+Maintenant que vous avez créé un service lié, vous pouvez l’utiliser dans un pipeline pour exécuter le notebook que vous avez consulté précédemment.
+
+### Créer un pipeline
+
+1. Dans Azure Data Factory Studio, sélectionnez **Créer** dans le volet de navigation.
+2. Dans la page **Créer**, dans le volet **Ressources Factory**, utilisez l’icône **+** pour ajouter un **pipeline**.
+3. Dans le volet **Propriétés** du nouveau pipeline, remplacez son nom par `Process Data with Databricks`. Utilisez ensuite le bouton **Propriétés** (qui ressemble à **<sub>*</sub>**) à droite de la barre d’outils pour masquer le volet **Propriétés**.
+4. Dans le volet **Activités**, développez **Databricks**, puis faites glisser une activité **Notebook** vers la surface du concepteur de pipeline.
+5. Une fois la nouvelle activité **Notebook1** sélectionnée, définissez les propriétés suivantes dans le volet du bas :
+    - **Général :**
+        - **Nom :** `Process Data`
+    - **Azure Databricks** :
+        - **Service lié Databricks** : *sélectionnez le service lié **AzureDatabricks** que vous avez créé précédemment*
+    - **Paramètres**:
+        - **Chemin d’accès au notebook** : *Naviguez jusqu’au dossier **Utilisateurs/votre_nom_d’utilisateur** et sélectionnez le notebook **Traiter les données***
+        - **Paramètres de base**: *Ajouter un nouveau paramètre nommé `folder` avec la valeur `product_data`*
+6. Utilisez le bouton **Valider** au-dessus de la surface du concepteur de pipeline pour valider le pipeline. Utilisez ensuite le bouton **Publier tout** pour le publier (l’enregistrer).
+
 ### Créer un service lié dans Azure Data Factory
 
 1. Revenez au portail Azure et, dans le groupe de ressources **msl-*xxxxxxx***, sélectionnez la ressource Azure Data Factory **adf*xxxxxxx***.
@@ -130,26 +150,6 @@ Pour utiliser Azure Databricks à partir d’un pipeline Azure Data Factory, v
     - **Version de Python** : 3
     - **Options de Worker** : fixe
     - **Workers** : 1
-
-## Utiliser un pipeline pour exécuter le notebook Azure Databricks
-
-Maintenant que vous avez créé un service lié, vous pouvez l’utiliser dans un pipeline pour exécuter le notebook que vous avez consulté précédemment.
-
-### Créer un pipeline
-
-1. Dans Azure Data Factory Studio, sélectionnez **Créer** dans le volet de navigation.
-2. Dans la page **Créer**, dans le volet **Ressources Factory**, utilisez l’icône **+** pour ajouter un **pipeline**.
-3. Dans le volet **Propriétés** du nouveau pipeline, remplacez son nom par `Process Data with Databricks`. Utilisez ensuite le bouton **Propriétés** (qui ressemble à **<sub>*</sub>**) à droite de la barre d’outils pour masquer le volet **Propriétés**.
-4. Dans le volet **Activités**, développez **Databricks**, puis faites glisser une activité **Notebook** vers la surface du concepteur de pipeline.
-5. Une fois la nouvelle activité **Notebook1** sélectionnée, définissez les propriétés suivantes dans le volet du bas :
-    - **Général :**
-        - **Nom :** `Process Data`
-    - **Azure Databricks** :
-        - **Service lié Databricks** : *sélectionnez le service lié **AzureDatabricks** que vous avez créé précédemment*
-    - **Paramètres**:
-        - **Chemin d’accès au notebook** : *Naviguez jusqu’au dossier **Utilisateurs/votre_nom_d’utilisateur** et sélectionnez le notebook **Traiter les données***
-        - **Paramètres de base**: *Ajouter un nouveau paramètre nommé `folder` avec la valeur `product_data`*
-6. Utilisez le bouton **Valider** au-dessus de la surface du concepteur de pipeline pour valider le pipeline. Utilisez ensuite le bouton **Publier tout** pour le publier (l’enregistrer).
 
 ### Exécuter le pipeline
 
