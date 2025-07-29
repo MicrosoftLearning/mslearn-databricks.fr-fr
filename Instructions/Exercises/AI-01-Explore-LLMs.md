@@ -45,13 +45,13 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 6. Si vous y êtes invité, choisissez l’abonnement à utiliser (uniquement si vous avez accès à plusieurs abonnements Azure).
 
-7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous attendez, consultez l’article [Présentation de Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) dans la documentation Azure Databricks.
+7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps.
 
 ## Créer un cluster
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec une version 13.3 LTS **<u>ML</u>** ou ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice et ignorer cette procédure.
+> **Conseil** : Si vous disposez déjà d’un cluster avec une version 15.4 LTS ou supérieure de **<u>ML</u>** dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour cet exercice et passer cette étape.
 
 1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant)
 1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx*** si vous avez utilisé le script d’installation pour la créer).
@@ -63,15 +63,11 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 1. Dans la page **Nouveau cluster**, créez un cluster avec les paramètres suivants :
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
-    - **Mode cluster** : nœud unique
-    - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
-    - **Version du runtime Databricks** : *Sélectionnez l’édition **<u>ML</u>** de la dernière version non bêta du runtime (**Not** version du runtime standard) qui :*
-        - *N’utilise **pas** de GPU*
-        - *Inclut Scala > **2.11***
-        - *Inclut Spark > **3.4***
+    - **Machine Learning** : Activé
+    - **Runtime Databricks** : 15.4 LTS
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
-    - **Type de nœud** : Standard_D4ds_v5
-    - **Arrêter après** *20* **minutes d’inactivité**
+    - **Type de collaborateur** : Standard_D4ds_v5
+    - **Nœud unique** : Coché
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
 
@@ -83,7 +79,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 2. Sélectionnez **Installer**.
 
-3. Sélectionnez **PyPI** comme bibliothèque source et saisissez `transformers==4.44.0` dans le champ **Package**.
+3. Sélectionnez **PyPI** comme bibliothèque source et saisissez `transformers==4.53.0` dans le champ **Package**.
 
 4. Sélectionnez **Installer**.
 
@@ -93,26 +89,29 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 2. Sélectionnez **Créer**, puis **Notebook**.
 
-3. Donnez un nom à votre notebook et sélectionnez le langage `Python`.
+3. Nommez votre bloc-notes et vérifiez que `Python` est sélectionné comme langue.
 
-4. Saisissez le code suivant dans la première cellule de code et exécutez-le :
+4. Dans le menu déroulant **Connecter**, sélectionnez la ressource de calcul que vous avez créée précédemment.
 
-     ```python
-    from transformers import pipeline
+5. Saisissez le code suivant dans la première cellule de code et exécutez-le :
 
-    # Load the summarization model
-    summarizer = pipeline("summarization")
+    ```python
+   from transformers import pipeline
 
-    # Load the sentiment analysis model
-    sentiment_analyzer = pipeline("sentiment-analysis")
+   # Load the summarization model with PyTorch weights
+   summarizer = pipeline("summarization", model="facebook/bart-large-cnn", framework="pt")
 
-    # Load the translation model
-    translator = pipeline("translation_en_to_fr")
+   # Load the sentiment analysis model
+   sentiment_analyzer = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english", revision="714eb0f")
 
-    # Load a general purpose model for zero-shot classification and few-shot learning
-    classifier = pipeline("zero-shot-classification")
-     ```
-Ce code charge tous les modèles nécessaires pour les tâches NLP présentées dans cet exercice.
+   # Load the translation model
+   translator = pipeline("translation_en_to_fr", model="google-t5/t5-base", revision="a9723ea")
+
+   # Load a general purpose model for zero-shot classification and few-shot learning
+   classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", revision="d7645e1") 
+    ```
+     
+    Ce code charge tous les modèles nécessaires pour les tâches NLP présentées dans cet exercice.
 
 ### Résumer le texte
 

@@ -7,7 +7,7 @@ lab:
 
 AutoML est une fonctionnalité d’Azure Databricks qui tente plusieurs algorithmes et paramètres avec vos données pour entraîner un modèle Machine Learning optimal.
 
-Cet exercice devrait prendre environ **30** minutes.
+Cet exercice devrait prendre environ **45** minutes.
 
 > **Remarque** : l’interface utilisateur d’Azure Databricks est soumise à une amélioration continue. Elle a donc peut-être changé depuis l’écriture des instructions de cet exercice.
 
@@ -81,15 +81,15 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 Pour entraîner un modèle Machine Learning à l’aide d’AutoML, vous devez charger les données d’apprentissage. Dans cet exercice, vous allez entraîner un modèle à classer un manchot dans l’une des trois espèces sur la base d’observations comprenant sa localisation et ses mesures corporelles. Vous allez charger des données d’apprentissage qui incluent l’étiquette d’espèce dans une table dans un entrepôt de données Azure Databricks.
 
 1. Dans le portail Azure Databricks de votre espace de travail, dans la barre latérale, sous **SQL**, sélectionnez **Entrepôts SQL**.
-1. Notez que l’espace de travail inclut déjà un entrepôt SQL nommé **Starter Warehouse**.
+1. Notez que l’espace de travail inclut déjà un entrepôt SQL nommé **Serverless Starter Warehouse**.
 1. Dans le menu **Actions** (**⁝**) de l’entrepôt SQL, sélectionnez **Modifier**. Définissez ensuite la propriété **Taille du cluster** sur **2X-Small** et enregistrez vos modifications.
 1. Sélectionnez le bouton **Démarrer** pour lancer l’entrepôt SQL (ce qui peut prendre une minute ou deux).
 
-> **Remarque** : si votre entrepôt SQL ne démarre pas, il se peut que le quota de votre abonnement soit insuffisant dans la région où votre espace de travail Azure Databricks est configuré. Consultez l’article [Quota de processeurs virtuels Azure requis](https://docs.microsoft.com/azure/databricks/sql/admin/sql-endpoints#required-azure-vcpu-quota) pour plus de détails. Si cela se produit, vous pouvez essayer de demander une augmentation de quota comme indiqué dans le message d’erreur lorsque l’entrepôt ne parvient pas à démarrer. Vous pouvez également essayer de supprimer votre espace de travail et d’en créer un autre dans une région différente. Vous pouvez spécifier une région comme paramètre pour le script d’installation comme suit : `./mslearn-databricks/setup.ps1 eastus`
+    > **Remarque** : si votre entrepôt SQL ne démarre pas, il se peut que le quota de votre abonnement soit insuffisant dans la région où votre espace de travail Azure Databricks est configuré. Consultez l’article [Quota de processeurs virtuels Azure requis](https://docs.microsoft.com/azure/databricks/sql/admin/sql-endpoints#required-azure-vcpu-quota) pour plus de détails. Si cela se produit, vous pouvez essayer de demander une augmentation de quota comme indiqué dans le message d’erreur lorsque l’entrepôt ne parvient pas à démarrer. Vous pouvez également essayer de supprimer votre espace de travail et d’en créer un autre dans une région différente. Vous pouvez spécifier une région comme paramètre pour le script d’installation comme suit : `./mslearn-databricks/setup.ps1 eastus`
 
 1. Téléchargez le fichier [**penguins.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv) à partir de `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv` vers votre ordinateur local, en l’enregistrant en tant que **penguins.csv**.
-1. Dans le portail de l’espace de travail Azure Databricks, dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Chargement de fichiers** et chargez le fichier **pingouins.csv** que vous avez téléchargé sur votre ordinateur.
-1. Dans la page **Charger des données**, sélectionnez le schéma **par défaut** et définissez le nom de la table sur **manchots**. Sélectionnez ensuite **Créer une table** dans le coin inférieur gauche de la page.
+1. Dans le portail de l’espace de travail Azure Databricks, dans la barre latérale, sélectionnez **(+) Nouveau**, puis **Ajouter ou charger des données**. Dans la page **Ajouter des données**, sélectionnez **Créer ou modifier une table** et chargez le fichier **penguins.csv** que vous avez téléchargé sur votre ordinateur.
+1. Dans la page **Créer ou modifier une table depuis le chargement de fichiers**, sélectionnez le schéma **default** et définissez le nom de la table sur **penguins**. Sélectionnez ensuite **Créer une table**.
 1. Une fois la table créée, vérifiez ses détails.
 
 ## Créer une expérience AutoML
@@ -97,10 +97,9 @@ Pour entraîner un modèle Machine Learning à l’aide d’AutoML, vous devez c
 Maintenant que vous avez des données, vous pouvez les utiliser avec AutoML pour entraîner un modèle.
 
 1. Dans la barre latérale de gauche, sélectionnez **Expériences**.
-1. Dans la page **Expériences**, sélectionnez **Créer une expérience AutoML**.
+1. Dans la page **Expériences** , recherchez la vignette **Classification** et sélectionnez **Démarrer l’entraînement**.
 1. Configurez l’expérience AutoML avec les paramètres suivants :
     - **Cluster** : *Sélectionner votre cluster*
-    - **Type de problème ML :** Classification
     - **Jeu de données d’apprentissage d’entrée** : *Accéder à la base de données **par défaut** et sélectionner la table **manchots***
     - **Cible de prédiction** : Espèce
     - **Nom de l’expérience** : Penguin-classification
@@ -112,7 +111,7 @@ Maintenant que vous avez des données, vous pouvez les utiliser avec AutoML pour
         - **Étiquette positive** : *Laisser vide*
         - **Emplacement de stockage des données intermédiaire** : Artefact MLflow
 1. Utilisez le bouton **Démarrer AutoML** pour démarrer l’expérience. Fermez les boîtes de dialogue d’informations affichées.
-1. Attendez la fin de l’expérience. Vous pouvez utiliser le bouton **Actualiser** à droite pour afficher les détails des exécutions générées.
+1. Attendez la fin de l’expérience. Vous pouvez afficher les détails des exécutions générées sous l’onglet **Exécutions**.
 1. Après cinq minutes, l’expérience se termine. L’actualisation des exécutions affiche l’exécution qui a entraîné le modèle le plus performant (en fonction de la métrique de *précision* que vous avez sélectionnée) en haut de la liste.
 
 ## Déployer le modèle le plus performant
