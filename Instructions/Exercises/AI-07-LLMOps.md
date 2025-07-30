@@ -1,9 +1,9 @@
 ---
 lab:
-  title: Implémentation de LLMOps avec Azure Databricks
+  title: Mettre en œuvre LLMOps avec Azure Databricks
 ---
 
-# Implémentation de LLMOps avec Azure Databricks
+# Mettre en œuvre LLMOps avec Azure Databricks
 
 Azure Databricks fournit une plateforme unifiée qui simplifie le cycle de vie de l’IA, de la préparation des données au service et à la supervision des modèles, en optimisant les performances et l’efficacité des systèmes de Machine Learning. Elle prend en charge le développement d’applications d’IA générative, tirant parti de fonctionnalités telles que Unity Catalog pour la gouvernance des données, MLflow pour le suivi des modèles et Service de modèles Mosaic AI pour le déploiement de LLM.
 

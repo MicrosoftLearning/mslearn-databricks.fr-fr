@@ -41,22 +41,21 @@ Si vous n’en avez pas déjà une, approvisionnez une ressource Azure OpenAI da
 
 ## Déployer le modèle nécessaire
 
-Azure fournit un portail web appelé **Azure AI Studio**, que vous pouvez utiliser pour déployer, gérer et explorer des modèles. Vous allez commencer votre exploration d’Azure OpenAI en utilisant Azure AI Studio pour déployer un modèle.
+Azure fournit un portail web appelé **Azure AI Foundry**, que vous pouvez utiliser pour déployer, gérer et explorer des modèles. Vous allez commencer votre exploration d’Azure OpenAI à l’aide d’Azure AI Foundry pour déployer un modèle.
 
-> **Remarque** : lorsque vous utilisez Azure AI Studio, des boîtes de message qui suggèrent des tâches à effectuer peuvent être affichées. Vous pouvez les fermer et suivre les étapes de cet exercice.
+> **Remarque** : Lorsque vous utilisez Azure AI Foundry, les boîtes de message qui suggèrent des tâches que vous devez effectuer peuvent s’afficher. Vous pouvez les fermer et suivre les étapes de cet exercice.
 
-1. Dans le portail Azure, sur la page **Vue d’ensemble** de votre ressource Azure OpenAI, faites défiler jusqu’à la section **Démarrer** et sélectionnez le bouton permettant d’accéder à **AI Studio**.
+1. Dans le portail Azure, accédez à la page **Vue d’ensemble** de votre ressource Azure OpenAI, faites défiler jusqu’à la section **Démarrer**, puis sélectionnez le bouton pour accéder à **Azure AI Foundry**.
    
-1. Dans Azure AI Studio, dans le panneau de gauche, sélectionnez la page **Deployments** et affichez vos modèles de déploiement existants. Si vous n’en avez pas encore, créez un déploiement du modèle **gpt-35-turbo** avec les paramètres suivants :
-    - **Nom du déploiement** : *gpt-35-turbo*
-    - **Modèle** : gpt-35-turbo
-    - **Version du modèle** : par défaut
+1. Dans Azure AI Foundry, sélectionnez la page **Deployments** dans le volet de gauche et affichez vos déploiements de modèles existants. Si vous n’en avez pas encore, créez un déploiement du modèle **gpt-4o** avec les paramètres suivants :
+    - **Nom du déploiement** : *gpt-4o*
     - **Type de déploiement** : Standard
-    - **Limite de débit de jetons par minute** : 5 000\*
+    - **Model version** : *utiliser la version par défaut*
+    - **Limitation du débit en jetons par minute** : 10 000\*
     - **Filtre de contenu** : valeur par défaut
     - **Enable dynamic quota** : désactivé
     
-> \* Une limite de débit de 5 000 jetons par minute est plus que suffisante pour effectuer cet exercice tout permettant à d’autres personnes d’utiliser le même abonnement.
+> \* Une limite de débit de 10 000 jetons par minute est plus que suffisante pour effectuer cet exercice tout en permettant à d’autres personnes d’utiliser le même abonnement.
 
 ## Provisionner un espace de travail Azure Databricks
 
@@ -76,7 +75,7 @@ Azure fournit un portail web appelé **Azure AI Studio**, que vous pouvez utilis
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec une version 13.3 LTS **<u>ML</u>** ou ultérieure du runtime dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour effectuer cet exercice et ignorer cette procédure.
+> **Conseil** : Si vous disposez déjà d’un cluster avec une version runtime 15.4 LTS ou supérieure de **<u>ML</u>** dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour cet exercice et ignorer cette procédure.
 
 1. Dans le Portail Azure, accédez au groupe de ressources où l’espace de travail Azure Databricks a été créé.
 2. Sélectionnez votre ressource Azure Databricks Service.
@@ -88,27 +87,15 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 5. Dans la page **Nouveau cluster**, créez un cluster avec les paramètres suivants :
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
-    - **Mode cluster** : nœud unique
-    - **Mode d’accès** : un seul utilisateur (*avec votre compte d’utilisateur sélectionné*)
-    - **Version du runtime Databricks** : *Sélectionnez l’édition **<u>ML</u>** de la dernière version non bêta du runtime (**Not** version du runtime standard) qui :*
-        - *N’utilise **pas** de GPU*
-        - *Inclut Scala > **2.11***
-        - *Inclut Spark > **3.4***
+    - **Machine Learning** : Activé
+    - **Runtime Databricks** : 15.4 LTS
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
-    - **Type de nœud** : Standard_D4ds_v5
-    - **Arrêter après** *20* **minutes d’inactivité**
+    - **Type de collaborateur** : Standard_D4ds_v5
+    - **Nœud simple** : Coché
 
 6. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
 
 > **Remarque** : si votre cluster ne démarre pas, le quota de votre abonnement est peut-être insuffisant dans la région où votre espace de travail Azure Databricks est approvisionné. Pour plus d’informations, consultez l’article [La limite de cœurs du processeur empêche la création du cluster](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si cela se produit, vous pouvez essayer de supprimer votre espace de travail et d’en créer un dans une autre région.
-
-## Installer les bibliothèques nécessaires
-
-1. Sur la page de votre cluster, sélectionnez l’onglet **Bibliothèques**.
-
-2. Sélectionnez **Installer**.
-
-3. Sélectionnez **PyPI** comme bibliothèque source et installez `openai==1.42.0`.
 
 ## Créer une nouvelle instance Notebook
 
@@ -169,7 +156,7 @@ L’IA responsable fait référence à une approche éthique et durable du déve
 
     for row in neutral_input:
         completion = client.chat.completions.create(
-            model="gpt-35-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": row},
@@ -180,7 +167,7 @@ L’IA responsable fait référence à une approche éthique et durable du déve
 
     for row in loaded_input:
         completion = client.chat.completions.create(
-            model="gpt-35-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": row},
