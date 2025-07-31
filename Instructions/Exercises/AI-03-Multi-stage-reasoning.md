@@ -47,13 +47,13 @@ Si vous n’en avez pas déjà une, approvisionnez une ressource Azure OpenAI da
 
 ## Déployer les modèles nécessaires
 
-Azure propose un portail Web nommé **Azure AI Foundry**, que vous pouvez utiliser pour déployer, gérer et explorer des modèles. Vous allez commencer votre exploration d’Azure OpenAI à l’aide d’Azure AI Foundry pour déployer un modèle.
+Azure fournit un portail web appelé **Azure AI Foundry**, que vous pouvez utiliser pour déployer, gérer et explorer des modèles. Vous allez commencer votre exploration d’Azure OpenAI à l’aide d’Azure AI Foundry pour déployer un modèle.
 
-> **Remarque** : Lorsque vous utilisez Azure AI Foundry, des encadrés de messages peuvent s’afficher pour vous proposer certaines actions. Vous pouvez les fermer et suivre les étapes de cet exercice.
+> **Remarque** : Lorsque vous utilisez Azure AI Foundry, les boîtes de message qui suggèrent des tâches que vous devez effectuer peuvent s’afficher. Vous pouvez les fermer et suivre les étapes de cet exercice.
 
-1. Dans le portail Azure, accédez à la page **Vue d’ensemble** de votre ressource Azure OpenAI, faites défiler jusqu’à la section **Démarrer**, puis sélectionnez le bouton pour accéder à **Azure AI Foundry**.
+1. Dans le portail Azure, accédez à la page **Vue d’ensemble** de votre ressource Azure OpenAI, faites défiler jusqu’à la section **Démarrer**, puis sélectionnez le bouton pour accéder à **Azure AI Foundry**.
    
-1. Dans Azure AI Foundry, dans le volet de gauche, sélectionnez la page **Déploiements**, puis affichez vos déploiements de modèles existants. Si vous n’en avez pas encore, créez un déploiement du modèle **gpt-4o** avec les paramètres suivants :
+1. Dans Azure AI Foundry, sélectionnez la page **Deployments** dans le volet de gauche et affichez vos déploiements de modèles existants. Si vous n’en avez pas encore, créez un déploiement du modèle **gpt-4o** avec les paramètres suivants :
     - **Nom du déploiement** : *gpt-4o*
     - **Type de déploiement** : Standard
     - **Model version** : *utiliser la version par défaut*
@@ -89,7 +89,7 @@ Azure propose un portail Web nommé **Azure AI Foundry**, que vous pouvez utilis
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec une version 15.4 LTS ou supérieure de **<u>ML</u>** dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour cet exercice et passer cette étape.
+> **Conseil** : Si vous disposez déjà d'un cluster avec une version d'exécution 16.4 LTS **<u>ML</u>** ou supérieure dans votre espace de travail Azure Databricks, vous pouvez l'utiliser pour réaliser cet exercice et ignorer cette procédure.
 
 1. Dans le Portail Azure, accédez au groupe de ressources où l’espace de travail Azure Databricks a été créé.
 1. Sélectionnez votre ressource Azure Databricks Service.
@@ -102,10 +102,10 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
     - **Machine Learning** : Activé
-    - **Runtime Databricks** : 15.4 LTS
+    - **Runtime Databricks** : 16.4-LTS
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
     - **Type de collaborateur** : Standard_D4ds_v5
-    - **Nœud unique** : Coché
+    - **Nœud simple** : Coché
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
 
