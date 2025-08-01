@@ -75,7 +75,7 @@ Azure fournit un portail web appelé **Azure AI Foundry**, que vous pouvez uti
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec une version runtime 15.4 LTS ou supérieure de **<u>ML</u>** dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour cet exercice et ignorer cette procédure.
+> **Conseil** : Si vous disposez déjà d'un cluster avec une version d'exécution 16.4 LTS **<u>ML</u>** ou supérieure dans votre espace de travail Azure Databricks, vous pouvez l'utiliser pour réaliser cet exercice et ignorer cette procédure.
 
 1. Dans le Portail Azure, accédez au groupe de ressources où l’espace de travail Azure Databricks a été créé.
 2. Sélectionnez votre ressource Azure Databricks Service.
@@ -88,7 +88,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
     - **Machine Learning** : Activé
-    - **Runtime Databricks** : 15.4 LTS
+    - **Runtime Databricks** : 16.4-LTS
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
     - **Type de collaborateur** : Standard_D4ds_v5
     - **Nœud simple** : Coché
