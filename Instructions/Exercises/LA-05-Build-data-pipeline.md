@@ -159,7 +159,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 1. Une fois le pipeline correctement exécuté, revenez au récent notebook *Créer un pipeline avec Delta Live Tables* que vous avez créé en premier, puis exécutez le code suivant dans une nouvelle cellule pour vérifier que les fichiers de toutes les 3 nouvelles tables ont été créés à l’emplacement de stockage spécifié :
 
      ```python
-    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/tables"))
+    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/schemas/default/tables"))
      ```
 
 1. Ajoutez une autre cellule de code et exécutez le code suivant pour vérifier que les tables ont été créées dans la base de données **par défaut** :

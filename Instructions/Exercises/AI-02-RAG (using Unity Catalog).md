@@ -51,7 +51,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 Azure Databricks est une plateforme de traitement distribuée qui utilise des *clusters Apache Spark* pour traiter des données en parallèle sur plusieurs nœuds. Chaque cluster se compose d’un nœud de pilote pour coordonner le travail et les nœuds Worker pour effectuer des tâches de traitement. Dans cet exercice, vous allez créer un cluster à *nœud unique* pour réduire les ressources de calcul utilisées dans l’environnement du labo (dans lequel les ressources peuvent être limitées). Dans un environnement de production, vous créez généralement un cluster avec plusieurs nœuds Worker.
 
-> **Conseil** : Si vous disposez déjà d’un cluster avec une version 15.4 LTS ou supérieure de **<u>ML</u>** dans votre espace de travail Azure Databricks, vous pouvez l’utiliser pour cet exercice et passer cette étape.
+> **Conseil** : Si vous disposez déjà d'un cluster avec une version d'exécution 16.4 LTS **<u>ML</u>** ou supérieure dans votre espace de travail Azure Databricks, vous pouvez l'utiliser pour réaliser cet exercice et ignorer cette procédure.
 
 1. Dans le portail Microsoft Azure, accédez au groupe de ressources **msl-*xxxxxxx*** créé par le script (ou le groupe de ressources contenant votre espace de travail Azure Databricks existant)
 1. Sélectionnez votre ressource de service Azure Databricks (nommée **databricks-*xxxxxxx*** si vous avez utilisé le script d’installation pour la créer).
@@ -64,10 +64,10 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
     - **Nom du cluster** : cluster de *nom d’utilisateur* (nom de cluster par défaut)
     - **Stratégie** : Non restreint
     - **Machine Learning** : Activé
-    - **Runtime Databricks** : 15.4 LTS
+    - **Runtime Databricks** : 16.4-LTS
     - **Utiliser l’accélération photon** : <u>Non</u> sélectionné
     - **Type de collaborateur** : Standard_D4ds_v5
-    - **Nœud unique** : Coché
+    - **Nœud simple** : Coché
 
 1. Attendez que le cluster soit créé. Cette opération peut prendre une à deux minutes.
 
@@ -89,16 +89,16 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 
 1. Dans la barre latérale, cliquez sur le lien **(+) Nouveau** pour créer un **notebook**. Dans la liste déroulante **Connexion**, sélectionnez votre cluster s’il n’est pas déjà sélectionné. Si le cluster n’est pas en cours d’exécution, le démarrage peut prendre une minute.
 
-1. Dans la première cellule du notebook, entrez la requête SQL suivante afin de créer un nouveau volume destiné à stocker les données de cet exercice dans votre catalogue par défaut.
+1. Dans la première cellule du notebook, entrez la requête SQL suivante pour créer un volume qui sera utilisé pour stocker les données de cet exercice dans votre catalogue par défaut :
 
     ```python
    %sql 
    CREATE VOLUME <catalog_name>.default.RAG_lab;
     ```
 
-1. Remplacez `<catalog_name>` par le nom de votre espace de travail, car Azure Databricks crée automatiquement un catalogue par défaut avec ce nom.
+1. Remplacez `<catalog_name>` par le nom de votre espace de travail, car Azure Databricks crée automatiquement un catalogue par défaut avec ce nom.
 1. Utilisez l’option de menu **&#9656; Exécuter la cellule** à gauche de la cellule pour l’exécuter. Attendez ensuite que le travail Spark s’exécute par le code.
-1. Dans une nouvelle cellule, exécutez le code suivant, qui utilise une commande *interpréteur de commandes* pour télécharger les données depuis GitHub vers votre catalogue Unity.
+1. Dans une nouvelle cellule, exécutez le code suivant qui utilise une commande *shell* pour télécharger des données à partir de GitHub dans votre catalogue Unity.
 
     ```python
    %sh
