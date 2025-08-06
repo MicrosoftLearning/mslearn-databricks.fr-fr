@@ -126,7 +126,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
      
 ## Valider le nombre de jetons
 
-`training_set.jsonl` et `validation_set.jsonl` sont constitués d’exemples de conversation différents entre `user` et `assistant`, qui serviront de points de données pour l’entraînement et la validation du modèle ajusté. Bien que les jeux de données utilisés dans cet exercice soient de taille réduite, il est important de garder à l’esprit que les modèles de langage (LLM) disposent d’une longueur de contexte maximale, exprimée en nombre de jetons. Ainsi, il est recommandé de vérifier le nombre de jetons de vos jeux de données avant d’entraîner votre modèle, et de les ajuster si nécessaire. 
+`training_set.jsonl` et `validation_set.jsonl` sont constitués d’exemples de conversation différents entre `user` et `assistant`, qui serviront de points de données pour l’entraînement et la validation du modèle ajusté. Bien que les jeux de données utilisés dans cet exercice soient de taille réduite, il est important de garder à l’esprit que les modèles de langage (LLM) disposent d’une longueur de contexte maximale, exprimée en nombre de jetons. Ainsi, il est recommandé de vérifier le nombre de jetons de vos jeux de données avant d'entraîner votre modèle, et de les ajuster si nécessaire. 
 
 1. Dans une nouvelle cellule, exécutez le code suivant pour valider le nombre de jetons pour chaque fichier :
 
@@ -218,7 +218,7 @@ Avant de commencer à ajuster le modèle, vous devez initialiser un client OpenA
 
 ## Soumettre une tâche d’ajustement
 
-Maintenant que les fichiers d’ajustement ont été correctement chargés, vous pouvez soumettre votre tâche d’entraînement à l’ajustement : Il n’est pas rare que l’entraînement prenne plus d’une heure. Une fois l’entraînement terminé, vous pouvez voir les résultats dans Azure AI Foundry en sélectionnant l’option **Réglage précis** dans le volet gauche.
+Maintenant que les fichiers d’ajustement ont été correctement chargés, vous pouvez soumettre votre tâche d’entraînement à l’ajustement : Il n’est pas rare que l’entraînement prenne plus d’une heure. Une fois l’entraînement terminé, vous pouvez consulter les résultats dans Azure AI Foundry en sélectionnant l’option **Réglage personnalisé** dans le volet gauche.
 
 1. Exécutez le code suivant dans une nouvelle cellule pour démarrer la tâche d’entraînement à l’ajustement :
 
@@ -253,13 +253,15 @@ Le paramètre `seed` contrôle la reproductibilité de la tâche d’ajustement.
    fine_tuned_model = response.fine_tuned_model
     ```
 
+4. Examinez la réponse json et notez le nom unique généré dans le champ `"fine_tuned_model"`. Il sera utilisé dans la tâche facultative suivante.
+
     >**REMARQUE** : Le réglage fin d'un modèle peut prendre plus de 60 minutes. Vous pouvez donc terminer l'exercice à ce stade et considérer le déploiement du modèle comme une tâche facultative si vous avez du temps libre.
 
 ## [FACULTATIF] Déployez un modèle optimisé
 
-Maintenant que vous disposez d’un modèle ajusté, vous pouvez le déployer en tant que modèle personnalisé et l’utiliser comme n’importe quel autre modèle déployé dans le terrain de jeu de **conversation** d’Azure AI Foundry ou via l’API de saisie semi-automatique de conversation.
+Une fois en possession de votre modèle ajusté, vous pouvez le déployer comme modèle personnalisé et l’utiliser comme n’importe quel autre modèle déployé, soit dans l’espace Terrain de jeu **conversationnel** d’Azure AI Foundry, soit via l’API de complétion de conversation.
 
-1. Dans une nouvelle cellule, exécutez le code suivant pour déployer votre modèle optimisé, en remplaçant les espaces réservés. `<YOUR_SUBSCRIPTION_ID>`, `<YOUR_RESOURCE_GROUP_NAME>`, et `<YOUR_AZURE_OPENAI_RESOURCE_NAME>`:
+1. Dans une nouvelle cellule, exécutez le code suivant pour déployer votre modèle optimisé, en remplaçant les espaces réservés. `<YOUR_SUBSCRIPTION_ID>`, `<YOUR_RESOURCE_GROUP_NAME>`, `<YOUR_AZURE_OPENAI_RESOURCE_NAME>` et `<FINE_TUNED_MODEL>` :
    
     ```python
    import json
@@ -279,7 +281,7 @@ Maintenant que vous disposez d’un modèle ajusté, vous pouvez le déployer en
        "properties": {
            "model": {
                "format": "OpenAI",
-               "name": "gpt-4o-ft",
+               "name": "<FINE_TUNED_MODEL>",
                "version": "1"
            }
        }
@@ -323,7 +325,9 @@ Maintenant que vous disposez d’un modèle ajusté, vous pouvez le déployer en
 
    print(response.choices[0].message.content)
     ```
- 
+
+>**REMARQUE** : Le déploiement du modèle de déploiement optimisé peut prendre quelques minutes. Vous pouvez le vérifier dans la page **Déploiements** dans Azure AI Foundry.
+
 ## Nettoyage
 
 Lorsque vous avez terminé avec votre ressource Azure OpenAI, n’oubliez pas de supprimer le déploiement ou la ressource entière dans le **Portail Azure** à `https://portal.azure.com`.

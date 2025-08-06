@@ -119,7 +119,7 @@ Azure Databricks est une plateforme de traitement distribuée qui utilise des *c
 1. Dans la première cellule de code, entrez et exécutez le code suivant pour installer les bibliothèques nécessaires :
    
     ```python
-   %pip install langchain openai langchain_openai faiss-cpu
+   %pip install langchain openai langchain_openai langchain-community faiss-cpu
     ```
 
 1. Une fois l’installation terminée, redémarrez le noyau dans une nouvelle cellule :
