@@ -1,11 +1,11 @@
 ---
 lab:
-  title: Déployer des charges de travail avec des workflows Azure Databricks
+  title: "Déployer des charges de travail avec des travaux Lakeflow d’Azure\_Databricks"
 ---
 
-# Déployer des charges de travail avec des workflows Azure Databricks
+# Déployer des charges de travail avec des travaux Lakeflow d’Azure Databricks
 
-Les workflows Azure Databricks fournissent une plateforme robuste pour déployer efficacement des charges de travail. Avec des fonctionnalités telles que les travaux Azure Databricks et les tables Delta Live Tables, les utilisateurs peuvent orchestrer des pipelines complexes de traitement des données, de Machine Learning et d’analyse.
+Les travaux Lakeflow Azure Databricks fournissent une plateforme robuste pour déployer efficacement des charges de travail. Avec des fonctionnalités telles que les travaux Azure Databricks et les tables Delta Live Tables, les utilisateurs peuvent orchestrer des pipelines complexes de traitement des données, de Machine Learning et d’analyse.
 
 Ce labo prend environ **40** minutes.
 
@@ -41,7 +41,7 @@ Cet exercice inclut un script permettant d’approvisionner un nouvel espace de 
 
 6. Si vous y êtes invité, choisissez l’abonnement à utiliser (uniquement si vous avez accès à plusieurs abonnements Azure).
 
-7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. Pendant que vous patientez, consultez l’article [Planifier et orchestrer des workflows](https://learn.microsoft.com/azure/databricks/jobs/) dans la documentation d’Azure Databricks.
+7. Attendez que le script se termine. Cela prend généralement environ 5 minutes, mais dans certains cas, cela peut prendre plus de temps. En attendant, consultez l’article [Travaux Lakeflow](https://learn.microsoft.com/azure/databricks/jobs/) dans la documentation Azure Databricks.
 
 ## Créer un cluster
 
@@ -143,9 +143,9 @@ Vous implémentez votre workflow de traitement et d’analyse des données à l�
 
 Azure Databricks gère l’orchestration des tâches, la gestion des clusters, la surveillance et les rapports d’erreurs pour tous vos travaux. Vous pouvez exécuter vos travaux immédiatement et régulièrement par le biais d’un système de planification facile à utiliser, chaque fois que de nouveaux fichiers arrivent dans un emplacement externe, ou en continu pour vous assurer qu’une instance du travail est toujours en cours d’exécution.
 
-1. Dans la barre latérale gauche, sélectionnez **Workflows**.
+1. Dans votre espace de travail, cliquez sur ![l’icône Flux de travail.](./images/WorkflowsIcon.svg) **Travaux et Pipelines** dans la barre latérale.
 
-2. Dans le volet Workflows, sélectionnez **Créer un travail**.
+2. Dans le volet Travaux et Pipelines, sélectionnez **Créer**, puis **Travail**.
 
 3. Remplacez le nom du travail par défaut (**Nouveau travail *[date]***) par `ETL job`.
 
